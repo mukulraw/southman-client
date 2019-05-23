@@ -8,6 +8,8 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
+import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -53,18 +55,39 @@ public class MainActivity extends AppCompatActivity {
 
         cname.setText(lname);
 
-        adapter = new PagerAdapter(getSupportFragmentManager(), 3);
+        adapter = new PagerAdapter(getSupportFragmentManager(), 2);
         pager.setAdapter(adapter);
         tabLayout.setViewPager(pager);
+
+
+        tabLayout.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int i, float v, int i1) {
+
+            }
+
+            @Override
+            public void onPageSelected(int i) {
+
+                Log.d("pageaa", String.valueOf(i));
+
+
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int i) {
+
+            }
+        });
+
 
     }
 
     public class PagerAdapter extends FragmentStatePagerAdapter {
 
         String[] titles = {
-                "Pending Orders",
-                "New Bills",
-                "Scratch Coupons"
+                "Orders",
+                "Bills"
         };
 
         public PagerAdapter(FragmentManager fm, int list) {
@@ -82,19 +105,16 @@ public class MainActivity extends AppCompatActivity {
 
             if (i == 0) {
 
-                return new Orders();
-            } else if (i == 1) {
                 return new Bills();
-            } else if (i == 2) {
-
-                return new Scratch();
+            } else if (i == 1) {
+                return new Orders();
             }
             return null;
         }
 
         @Override
         public int getCount() {
-            return 3;
+            return 2;
         }
     }
 

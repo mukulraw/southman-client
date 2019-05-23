@@ -1,6 +1,8 @@
 package com.southman.southmanclient;
 
+import com.southman.southmanclient.billPOJO.billBean;
 import com.southman.southmanclient.loginPOJO.loginBean;
+import com.southman.southmanclient.orderPOJO.orderBean;
 
 import retrofit2.Call;
 import retrofit2.http.Multipart;
@@ -18,6 +20,16 @@ public interface AllApiIneterface {
             @Part("token") String token
     );
 
+    @Multipart
+    @POST("bigboss/api/getBills.php")
+    Call<billBean> getBills(
+            @Part("client") String client
+    );
 
+    @Multipart
+    @POST("bigboss/api/getOrders.php")
+    Call<orderBean> getOrders(
+            @Part("id") String client
+    );
 
 }
