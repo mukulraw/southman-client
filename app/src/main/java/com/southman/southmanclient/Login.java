@@ -81,10 +81,12 @@ public class Login extends AppCompatActivity {
                         AllApiIneterface cr = retrofit.create(AllApiIneterface.class);
 
 
-                        Call<loginBean> call = cr.login(u, p, "");
+                        Call<loginBean> call = cr.login(u, p, SharePreferenceUtils.getInstance().getString("token"));
 
                         call.enqueue(new Callback<loginBean>() {
                             @Override
+
+
                             public void onResponse(Call<loginBean> call, Response<loginBean> response) {
 
 
@@ -95,9 +97,20 @@ public class Login extends AppCompatActivity {
                                     SharePreferenceUtils.getInstance().saveString("username" , response.body().getData().getUsername());
                                     SharePreferenceUtils.getInstance().saveString("type" , response.body().getData().getTyp());
 
-                                    Intent i = new Intent(Login.this, MainActivity.class);
-                                    startActivity(i);
-                                    finishAffinity();
+                                    if (response.body().getData().getTyp().equals("admin"))
+                                    {
+                                        Intent i = new Intent(Login.this, MainActivity2.class);
+                                        startActivity(i);
+                                        finishAffinity();
+                                    }
+                                    else
+                                    {
+                                        Intent i = new Intent(Login.this, MainActivity.class);
+                                        startActivity(i);
+                                        finishAffinity();
+                                    }
+
+
                                 }
 
                                 Toast.makeText(Login.this, response.body().getMessage(), Toast.LENGTH_SHORT).show();

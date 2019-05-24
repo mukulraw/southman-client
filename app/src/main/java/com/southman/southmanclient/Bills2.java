@@ -30,14 +30,14 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 import retrofit2.converter.scalars.ScalarsConverterFactory;
 
-public class Bills extends Fragment {
-
+public class Bills2 extends Fragment {
 
     RecyclerView grid;
     GridLayoutManager manager;
     ProgressBar progress;
     List<Datum> list;
     BillAdapter adapter;
+
 
     @Nullable
     @Override
@@ -77,7 +77,7 @@ public class Bills extends Fragment {
         AllApiIneterface cr = retrofit.create(AllApiIneterface.class);
 
 
-        Call<orderBean> call = cr.getOrders(SharePreferenceUtils.getInstance().getString("id"));
+        Call<orderBean> call = cr.getOrders3(SharePreferenceUtils.getInstance().getString("id"));
 
         call.enqueue(new Callback<orderBean>() {
             @Override
@@ -146,10 +146,17 @@ public class Bills extends Fragment {
 
                     holder.price.setText("Price - " + item.getPrice());
 
-                    float pr = Float.parseFloat(item.getPrice());
-                    float pa = Float.parseFloat(item.getCashValue());
+                    try {
 
-                    holder.paid.setText("Collected - " + String.valueOf(pr - pa));
+                        float pr = Float.parseFloat(item.getPrice());
+                        float pa = Float.parseFloat(item.getCashValue());
+
+                        holder.paid.setText("Collected - " + String.valueOf(pr - pa));
+
+                    }catch (Exception e)
+                    {
+                        e.printStackTrace();
+                    }
 
                     holder.paid.setVisibility(View.VISIBLE);
                     holder.price.setVisibility(View.VISIBLE);
@@ -160,10 +167,17 @@ public class Bills extends Fragment {
 
                     holder.price.setText("Price - " + item.getPrice());
 
-                    float pr1 = Float.parseFloat(item.getPrice());
-                    float pa1 = Float.parseFloat(item.getCashValue());
+                    try {
 
-                    holder.paid.setText("Collected - " + String.valueOf(pr1 - pa1));
+                        float pr1 = Float.parseFloat(item.getPrice());
+                        float pa1 = Float.parseFloat(item.getCashValue());
+
+                        holder.paid.setText("Collected - " + String.valueOf(pr1 - pa1));
+
+                    }catch (Exception e)
+                    {
+                        e.printStackTrace();
+                    }
 
                     holder.paid.setVisibility(View.VISIBLE);
                     holder.price.setVisibility(View.VISIBLE);
@@ -177,101 +191,7 @@ public class Bills extends Fragment {
                     break;
             }
 
-            holder.complete.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-
-                    final Dialog dialog = new Dialog(context);
-                    dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-                    dialog.setCancelable(false);
-                    dialog.setContentView(R.layout.complete_dialog);
-                    dialog.show();
-
-                    Button ookk = dialog.findViewById(R.id.button2);
-                    Button canc = dialog.findViewById(R.id.button4);
-
-                    canc.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            dialog.dismiss();
-                        }
-                    });
-
-                    ookk.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-
-                            Bean b = (Bean) getActivity().getApplicationContext();
-
-                            Retrofit retrofit = new Retrofit.Builder()
-                                    .baseUrl(b.baseurl)
-                                    .addConverterFactory(ScalarsConverterFactory.create())
-                                    .addConverterFactory(GsonConverterFactory.create())
-                                    .build();
-
-                            AllApiIneterface cr = retrofit.create(AllApiIneterface.class);
-
-                            Call<orderBean> call = cr.completeOrder(item.getId());
-
-                            call.enqueue(new Callback<orderBean>() {
-                                @Override
-                                public void onResponse(Call<orderBean> call, Response<orderBean> response) {
-
-                                    dialog.dismiss();
-
-                                    Toast.makeText(context, response.body().getMessage(), Toast.LENGTH_SHORT).show();
-
-                                    progress.setVisibility(View.VISIBLE);
-
-                                    Bean b = (Bean) getActivity().getApplicationContext();
-
-                                    Retrofit retrofit = new Retrofit.Builder()
-                                            .baseUrl(b.baseurl)
-                                            .addConverterFactory(ScalarsConverterFactory.create())
-                                            .addConverterFactory(GsonConverterFactory.create())
-                                            .build();
-
-                                    AllApiIneterface cr = retrofit.create(AllApiIneterface.class);
-
-
-                                    Call<orderBean> call2 = cr.getOrders(SharePreferenceUtils.getInstance().getString("id"));
-
-                                    call2.enqueue(new Callback<orderBean>() {
-                                        @Override
-                                        public void onResponse(Call<orderBean> call, Response<orderBean> response2) {
-
-                                            if (response2.body().getStatus().equals("1"))
-                                            {
-                                                adapter.setData(response2.body().getData());
-                                            }
-                                            else
-                                            {
-                                                Toast.makeText(getContext(), response2.body().getMessage(), Toast.LENGTH_SHORT).show();
-                                            }
-
-                                            progress.setVisibility(View.GONE);
-
-                                        }
-
-                                        @Override
-                                        public void onFailure(Call<orderBean> call, Throwable t) {
-                                            progress.setVisibility(View.GONE);
-                                        }
-                                    });
-
-                                }
-
-                                @Override
-                                public void onFailure(Call<orderBean> call, Throwable t) {
-
-                                }
-                            });
-
-                        }
-                    });
-
-                }
-            });
+            holder.complete.setText(item.getStatus());
 
         }
 
@@ -298,6 +218,7 @@ public class Bills extends Fragment {
             }
         }
     }
+
 
 
 }

@@ -27,8 +27,32 @@ public interface AllApiIneterface {
     );
 
     @Multipart
+    @POST("bigboss/api/getBills3.php")
+    Call<billBean> getBills3(
+            @Part("client") String client
+    );
+
+    @Multipart
     @POST("bigboss/api/getOrders.php")
     Call<orderBean> getOrders(
+            @Part("id") String client
+    );
+
+    @Multipart
+    @POST("bigboss/api/getOrders3.php")
+    Call<orderBean> getOrders3(
+            @Part("id") String client
+    );
+
+    @Multipart
+    @POST("bigboss/api/getOrders2.php")
+    Call<orderBean> getOrders2(
+            @Part("id") String client
+    );
+
+    @Multipart
+    @POST("bigboss/api/completeOrder.php")
+    Call<orderBean> completeOrder(
             @Part("id") String client
     );
 

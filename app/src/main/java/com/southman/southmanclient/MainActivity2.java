@@ -17,10 +17,9 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.makeramen.roundedimageview.RoundedImageView;
 import com.ogaclejapan.smarttablayout.SmartTabLayout;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity2 extends AppCompatActivity {
 
     Toolbar toolbar;
 
@@ -30,21 +29,20 @@ public class MainActivity extends AppCompatActivity {
 
     PagerAdapter adapter;
 
-    ImageView history, logout;
+    ImageView logout;
 
     TextView cname;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_main2);
 
         cname = findViewById(R.id.location);
 
         toolbar = findViewById(R.id.toolbar);
 
-        history = findViewById(R.id.history);
+
         logout = findViewById(R.id.logout);
 
         setSupportActionBar(toolbar);
@@ -70,7 +68,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                final Dialog dialog = new Dialog(MainActivity.this);
+                final Dialog dialog = new Dialog(MainActivity2.this);
                 dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
                 dialog.setCancelable(false);
                 dialog.setContentView(R.layout.logout_dialog);
@@ -91,11 +89,9 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void onClick(View v) {
 
-
-
                         SharePreferenceUtils.getInstance().deletePref();
 
-                        Intent intent = new Intent(MainActivity.this , Login.class);
+                        Intent intent = new Intent(MainActivity2.this , Login.class);
                         startActivity(intent);
 
                         finishAffinity();
@@ -129,14 +125,6 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-        history.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this , History.class);
-                startActivity(intent);
-            }
-        });
-
 
     }
 
@@ -162,9 +150,9 @@ public class MainActivity extends AppCompatActivity {
 
             if (i == 0) {
 
-                return new Bills();
+                return new Bills2();
             } else if (i == 1) {
-                return new Orders();
+                return new Orders2();
             }
             return null;
         }

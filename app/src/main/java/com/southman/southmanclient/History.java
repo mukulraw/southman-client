@@ -2,12 +2,13 @@ package com.southman.southmanclient;
 
 import android.app.Dialog;
 import android.content.Context;
-import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
+import android.support.v7.app.AppCompatActivity;
+import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
+import android.text.method.HideReturnsTransformationMethod;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,33 +31,52 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 import retrofit2.converter.scalars.ScalarsConverterFactory;
 
-public class Bills extends Fragment {
-
+public class History extends AppCompatActivity {
 
     RecyclerView grid;
     GridLayoutManager manager;
     ProgressBar progress;
     List<Datum> list;
     BillAdapter adapter;
+    Toolbar toolbar;
 
-    @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.bill_layout , container , false);
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_history);
 
         list = new ArrayList<>();
 
-        grid = view.findViewById(R.id.grid);
-        manager = new GridLayoutManager(getContext() , 1);
-        progress = view.findViewById(R.id.progress);
+        toolbar = findViewById(R.id.toolbar);
+        grid = findViewById(R.id.grid);
+        manager = new GridLayoutManager(History.this, 1);
+        progress = findViewById(R.id.progress);
 
-        adapter = new BillAdapter(getActivity() , list);
+
+        setSupportActionBar(toolbar);
+
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
+
+        toolbar.setNavigationIcon(R.drawable.arrowleft);
+
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                finish();
+            }
+        });
+
+        toolbar.setTitle("History");
+
+
+
+        adapter = new BillAdapter(this , list);
 
         grid.setAdapter(adapter);
         grid.setLayoutManager(manager);
 
 
-        return view;
     }
 
     @Override
@@ -66,7 +86,7 @@ public class Bills extends Fragment {
 
         progress.setVisibility(View.VISIBLE);
 
-        Bean b = (Bean) getActivity().getApplicationContext();
+        Bean b = (Bean) getApplicationContext();
 
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(b.baseurl)
@@ -77,7 +97,7 @@ public class Bills extends Fragment {
         AllApiIneterface cr = retrofit.create(AllApiIneterface.class);
 
 
-        Call<orderBean> call = cr.getOrders(SharePreferenceUtils.getInstance().getString("id"));
+        Call<orderBean> call = cr.getOrders2(SharePreferenceUtils.getInstance().getString("id"));
 
         call.enqueue(new Callback<orderBean>() {
             @Override
@@ -89,7 +109,7 @@ public class Bills extends Fragment {
                 }
                 else
                 {
-                    Toast.makeText(getContext(), response.body().getMessage(), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(History.this, response.body().getMessage(), Toast.LENGTH_SHORT).show();
                 }
 
                 progress.setVisibility(View.GONE);
@@ -177,101 +197,8 @@ public class Bills extends Fragment {
                     break;
             }
 
-            holder.complete.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
 
-                    final Dialog dialog = new Dialog(context);
-                    dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-                    dialog.setCancelable(false);
-                    dialog.setContentView(R.layout.complete_dialog);
-                    dialog.show();
-
-                    Button ookk = dialog.findViewById(R.id.button2);
-                    Button canc = dialog.findViewById(R.id.button4);
-
-                    canc.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            dialog.dismiss();
-                        }
-                    });
-
-                    ookk.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-
-                            Bean b = (Bean) getActivity().getApplicationContext();
-
-                            Retrofit retrofit = new Retrofit.Builder()
-                                    .baseUrl(b.baseurl)
-                                    .addConverterFactory(ScalarsConverterFactory.create())
-                                    .addConverterFactory(GsonConverterFactory.create())
-                                    .build();
-
-                            AllApiIneterface cr = retrofit.create(AllApiIneterface.class);
-
-                            Call<orderBean> call = cr.completeOrder(item.getId());
-
-                            call.enqueue(new Callback<orderBean>() {
-                                @Override
-                                public void onResponse(Call<orderBean> call, Response<orderBean> response) {
-
-                                    dialog.dismiss();
-
-                                    Toast.makeText(context, response.body().getMessage(), Toast.LENGTH_SHORT).show();
-
-                                    progress.setVisibility(View.VISIBLE);
-
-                                    Bean b = (Bean) getActivity().getApplicationContext();
-
-                                    Retrofit retrofit = new Retrofit.Builder()
-                                            .baseUrl(b.baseurl)
-                                            .addConverterFactory(ScalarsConverterFactory.create())
-                                            .addConverterFactory(GsonConverterFactory.create())
-                                            .build();
-
-                                    AllApiIneterface cr = retrofit.create(AllApiIneterface.class);
-
-
-                                    Call<orderBean> call2 = cr.getOrders(SharePreferenceUtils.getInstance().getString("id"));
-
-                                    call2.enqueue(new Callback<orderBean>() {
-                                        @Override
-                                        public void onResponse(Call<orderBean> call, Response<orderBean> response2) {
-
-                                            if (response2.body().getStatus().equals("1"))
-                                            {
-                                                adapter.setData(response2.body().getData());
-                                            }
-                                            else
-                                            {
-                                                Toast.makeText(getContext(), response2.body().getMessage(), Toast.LENGTH_SHORT).show();
-                                            }
-
-                                            progress.setVisibility(View.GONE);
-
-                                        }
-
-                                        @Override
-                                        public void onFailure(Call<orderBean> call, Throwable t) {
-                                            progress.setVisibility(View.GONE);
-                                        }
-                                    });
-
-                                }
-
-                                @Override
-                                public void onFailure(Call<orderBean> call, Throwable t) {
-
-                                }
-                            });
-
-                        }
-                    });
-
-                }
-            });
+            holder.complete.setText(item.getStatus());
 
         }
 
@@ -298,6 +225,7 @@ public class Bills extends Fragment {
             }
         }
     }
+
 
 
 }
