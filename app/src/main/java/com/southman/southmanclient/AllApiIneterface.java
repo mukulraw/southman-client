@@ -21,6 +21,14 @@ public interface AllApiIneterface {
     );
 
     @Multipart
+    @POST("bigboss/api/register2.php")
+    Call<loginBean> register(
+            @Part("name") String name,
+            @Part("phone") String phone,
+            @Part("message") String messae
+    );
+
+    @Multipart
     @POST("bigboss/api/getBills.php")
     Call<billBean> getBills(
             @Part("client") String client

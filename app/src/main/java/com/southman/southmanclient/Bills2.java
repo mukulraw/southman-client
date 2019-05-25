@@ -2,6 +2,7 @@ package com.southman.southmanclient;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -143,15 +144,15 @@ public class Bills2 extends Fragment {
             switch (item.getText()) {
                 case "perks":
                     holder.type.setText("VOUCHER STORE - " + item.getId());
-
-                    holder.price.setText("Price - " + item.getPrice());
+                    holder.type.setTextColor(Color.parseColor("#009688"));
+                    holder.price.setText("Benefits - " + item.getPrice());
 
                     try {
 
                         float pr = Float.parseFloat(item.getPrice());
                         float pa = Float.parseFloat(item.getCashValue());
 
-                        holder.paid.setText("Collected - " + String.valueOf(pr - pa));
+                        holder.paid.setText("Pending benefits - " + String.valueOf(pr - pa));
 
                     }catch (Exception e)
                     {
@@ -164,15 +165,15 @@ public class Bills2 extends Fragment {
                     break;
                 case "cash":
                     holder.type.setText("REDEEM STORE - " + item.getId());
-
-                    holder.price.setText("Price - " + item.getPrice());
+                    holder.type.setTextColor(Color.parseColor("#689F38"));
+                    holder.price.setText("Benefits - " + item.getPrice());
 
                     try {
 
                         float pr1 = Float.parseFloat(item.getPrice());
                         float pa1 = Float.parseFloat(item.getCashValue());
 
-                        holder.paid.setText("Collected - " + String.valueOf(pr1 - pa1));
+                        holder.paid.setText("Pending benefits - " + String.valueOf(pr1 - pa1));
 
                     }catch (Exception e)
                     {
@@ -185,6 +186,7 @@ public class Bills2 extends Fragment {
                     break;
                 case "scratch":
                     holder.type.setText("SCRATCH CARD - " + item.getId());
+                    holder.type.setTextColor(Color.parseColor("#F9A825"));
                     holder.paid.setVisibility(View.GONE);
                     holder.price.setVisibility(View.GONE);
 
