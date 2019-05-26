@@ -166,12 +166,12 @@ public class History extends AppCompatActivity {
                     holder.type.setText("VOUCHER STORE - " + item.getId());
                     holder.type.setTextColor(Color.parseColor("#009688"));
 
-                    holder.price.setText("Benefits - " + item.getPrice());
+                    holder.price.setText("Benefits - " + item.getPrice() + " credits");
 
                     float pr = Float.parseFloat(item.getPrice());
                     float pa = Float.parseFloat(item.getCashValue());
 
-                    holder.paid.setText("Pending benefits - " + String.valueOf(pr - pa));
+                    holder.paid.setText("Pending benefits - " + String.valueOf(pr - pa) + " credits");
 
                     holder.paid.setVisibility(View.VISIBLE);
                     holder.price.setVisibility(View.VISIBLE);
@@ -180,12 +180,12 @@ public class History extends AppCompatActivity {
                 case "cash":
                     holder.type.setText("REDEEM STORE - " + item.getId());
                     holder.type.setTextColor(Color.parseColor("#689F38"));
-                    holder.price.setText("Benefits - " + item.getPrice());
+                    holder.price.setText("Benefits - " + item.getPrice() + " credits");
 
                     float pr1 = Float.parseFloat(item.getPrice());
                     float pa1 = Float.parseFloat(item.getCashValue());
 
-                    holder.paid.setText("Pending benefits - " + String.valueOf(pr1 - pa1));
+                    holder.paid.setText("Pending benefits - " + String.valueOf(pr1 - pa1) + " credits");
 
                     holder.paid.setVisibility(View.VISIBLE);
                     holder.price.setVisibility(View.VISIBLE);
@@ -193,9 +193,12 @@ public class History extends AppCompatActivity {
                     break;
                 case "scratch":
                     holder.type.setText("SCRATCH CARD - " + item.getId());
+
+                    holder.price.setText("Benefits - " + item.getCashValue() + " credits");
+
                     holder.type.setTextColor(Color.parseColor("#F9A825"));
                     holder.paid.setVisibility(View.GONE);
-                    holder.price.setVisibility(View.GONE);
+                    //holder.price.setVisibility(View.GONE);
 
                     break;
             }

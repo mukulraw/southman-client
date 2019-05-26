@@ -145,14 +145,14 @@ public class Bills2 extends Fragment {
                 case "perks":
                     holder.type.setText("VOUCHER STORE - " + item.getId());
                     holder.type.setTextColor(Color.parseColor("#009688"));
-                    holder.price.setText("Benefits - " + item.getPrice());
+                    holder.price.setText("Benefits - " + item.getPrice() + " credits");
 
                     try {
 
                         float pr = Float.parseFloat(item.getPrice());
                         float pa = Float.parseFloat(item.getCashValue());
 
-                        holder.paid.setText("Pending benefits - " + String.valueOf(pr - pa));
+                        holder.paid.setText("Pending benefits - " + String.valueOf(pr - pa) + " credits");
 
                     }catch (Exception e)
                     {
@@ -166,14 +166,14 @@ public class Bills2 extends Fragment {
                 case "cash":
                     holder.type.setText("REDEEM STORE - " + item.getId());
                     holder.type.setTextColor(Color.parseColor("#689F38"));
-                    holder.price.setText("Benefits - " + item.getPrice());
+                    holder.price.setText("Benefits - " + item.getPrice() + " credits");
 
                     try {
 
                         float pr1 = Float.parseFloat(item.getPrice());
                         float pa1 = Float.parseFloat(item.getCashValue());
 
-                        holder.paid.setText("Pending benefits - " + String.valueOf(pr1 - pa1));
+                        holder.paid.setText("Pending benefits - " + String.valueOf(pr1 - pa1) + " credits");
 
                     }catch (Exception e)
                     {
@@ -188,8 +188,9 @@ public class Bills2 extends Fragment {
                     holder.type.setText("SCRATCH CARD - " + item.getId());
                     holder.type.setTextColor(Color.parseColor("#F9A825"));
                     holder.paid.setVisibility(View.GONE);
-                    holder.price.setVisibility(View.GONE);
+                    //holder.price.setVisibility(View.GONE);
 
+                    holder.price.setText("Benefits - " + item.getCashValue() + " credits");
                     break;
             }
 
