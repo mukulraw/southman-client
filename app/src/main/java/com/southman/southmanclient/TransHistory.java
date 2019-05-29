@@ -1,5 +1,6 @@
 package com.southman.southmanclient;
 
+import android.app.Dialog;
 import android.content.Context;
 import android.graphics.Color;
 import android.support.annotation.NonNull;
@@ -8,10 +9,14 @@ import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.Button;
+import android.widget.DatePicker;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -19,7 +24,10 @@ import android.widget.Toast;
 import com.southman.southmanclient.transPOJO.Datum;
 import com.southman.southmanclient.transPOJO.transBean;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import retrofit2.Call;
@@ -38,6 +46,8 @@ public class TransHistory extends AppCompatActivity {
     BillAdapter adapter;
     Toolbar toolbar;
     String id;
+    LinearLayout linear;
+    TextView date;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,10 +58,14 @@ public class TransHistory extends AppCompatActivity {
 
         list = new ArrayList<>();
 
+        linear = findViewById(R.id.linear);
+        date = findViewById(R.id.date);
         toolbar = findViewById(R.id.toolbar);
         grid = findViewById(R.id.grid);
         manager = new GridLayoutManager(TransHistory.this, 1);
         progress = findViewById(R.id.progress);
+
+
 
 
         setSupportActionBar(toolbar);
@@ -71,6 +85,92 @@ public class TransHistory extends AppCompatActivity {
         toolbar.setTitle("Transaction history");
 
 
+        date.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+
+                final Dialog dialog = new Dialog(TransHistory.this);
+                dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                dialog.setCancelable(true);
+                dialog.setContentView(R.layout.date_dialog);
+                dialog.show();
+
+
+                final DatePicker picker = dialog.findViewById(R.id.date);
+                Button ok = dialog.findViewById(R.id.ok);
+
+                long now = System.currentTimeMillis() - 1000;
+                picker.setMaxDate(now);
+
+                ok.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+
+                        int year = picker.getYear();
+                        int month = picker.getMonth();
+                        int day = picker.getDayOfMonth();
+
+                        Calendar calendar = Calendar.getInstance();
+                        calendar.set(year, month, day);
+
+                        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+                        String strDate = format.format(calendar.getTime());
+
+                        dialog.dismiss();
+
+                        date.setText("Date - " + strDate + " (click to change)");
+
+
+
+                        progress.setVisibility(View.VISIBLE);
+
+                        Bean b = (Bean) getApplicationContext();
+
+                        Retrofit retrofit = new Retrofit.Builder()
+                                .baseUrl(b.baseurl)
+                                .addConverterFactory(ScalarsConverterFactory.create())
+                                .addConverterFactory(GsonConverterFactory.create())
+                                .build();
+
+                        AllApiIneterface cr = retrofit.create(AllApiIneterface.class);
+
+
+                        Call<transBean> call = cr.getTrans(id , strDate);
+
+                        call.enqueue(new Callback<transBean>() {
+                            @Override
+                            public void onResponse(Call<transBean> call, Response<transBean> response) {
+
+                                if (response.body().getStatus().equals("1")) {
+                                    adapter.setData(response.body().getData());
+                                    linear.setVisibility(View.GONE);
+                                } else {
+                                    linear.setVisibility(View.VISIBLE);
+                                    //Toast.makeText(TransHistory.this, response.body().getMessage(), Toast.LENGTH_SHORT).show();
+                                }
+
+                                progress.setVisibility(View.GONE);
+
+                            }
+
+                            @Override
+                            public void onFailure(Call<transBean> call, Throwable t) {
+                                progress.setVisibility(View.GONE);
+                            }
+                        });
+
+
+
+                    }
+                });
+
+
+
+            }
+        });
+
+
         adapter = new BillAdapter(this, list);
 
         grid.setAdapter(adapter);
@@ -80,6 +180,14 @@ public class TransHistory extends AppCompatActivity {
     @Override
     public void onResume() {
         super.onResume();
+
+        Date c = Calendar.getInstance().getTime();
+        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+        String formattedDate = df.format(c);
+
+        Log.d("dddd" , formattedDate);
+
+        date.setText("Date - " + formattedDate + " (click to change)");
 
 
         progress.setVisibility(View.VISIBLE);
@@ -95,7 +203,7 @@ public class TransHistory extends AppCompatActivity {
         AllApiIneterface cr = retrofit.create(AllApiIneterface.class);
 
 
-        Call<transBean> call = cr.getTrans(id);
+        Call<transBean> call = cr.getTrans(id , formattedDate);
 
         call.enqueue(new Callback<transBean>() {
             @Override
@@ -103,8 +211,10 @@ public class TransHistory extends AppCompatActivity {
 
                 if (response.body().getStatus().equals("1")) {
                     adapter.setData(response.body().getData());
+                    linear.setVisibility(View.GONE);
                 } else {
-                    Toast.makeText(TransHistory.this, response.body().getMessage(), Toast.LENGTH_SHORT).show();
+                    linear.setVisibility(View.VISIBLE);
+                    //Toast.makeText(TransHistory.this, response.body().getMessage(), Toast.LENGTH_SHORT).show();
                 }
 
                 progress.setVisibility(View.GONE);

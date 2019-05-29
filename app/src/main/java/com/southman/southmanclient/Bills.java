@@ -9,11 +9,14 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.Button;
+import android.widget.DatePicker;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -21,7 +24,10 @@ import android.widget.Toast;
 import com.southman.southmanclient.orderPOJO.Datum;
 import com.southman.southmanclient.orderPOJO.orderBean;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import retrofit2.Call;
@@ -39,6 +45,10 @@ public class Bills extends Fragment {
     ProgressBar progress;
     List<Datum> list;
     BillAdapter adapter;
+    TextView date;
+    LinearLayout linear;
+
+    String dd;
 
     @Nullable
     @Override
@@ -47,6 +57,8 @@ public class Bills extends Fragment {
 
         list = new ArrayList<>();
 
+        linear = view.findViewById(R.id.linear);
+        date = view.findViewById(R.id.date);
         grid = view.findViewById(R.id.grid);
         manager = new GridLayoutManager(getContext() , 1);
         progress = view.findViewById(R.id.progress);
@@ -56,6 +68,96 @@ public class Bills extends Fragment {
         grid.setAdapter(adapter);
         grid.setLayoutManager(manager);
 
+        date.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+
+                final Dialog dialog = new Dialog(getActivity());
+                dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                dialog.setCancelable(true);
+                dialog.setContentView(R.layout.date_dialog);
+                dialog.show();
+
+
+                final DatePicker picker = dialog.findViewById(R.id.date);
+                Button ok = dialog.findViewById(R.id.ok);
+
+                long now = System.currentTimeMillis() - 1000;
+                picker.setMaxDate(now);
+
+                ok.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+
+                        int year = picker.getYear();
+                        int month = picker.getMonth();
+                        int day = picker.getDayOfMonth();
+
+                        Calendar calendar = Calendar.getInstance();
+                        calendar.set(year, month, day);
+
+                        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+                        String strDate = format.format(calendar.getTime());
+
+                        dialog.dismiss();
+
+                        date.setText("Date - " + strDate + " (click to change)");
+
+                        dd = strDate;
+
+                        progress.setVisibility(View.VISIBLE);
+
+                        Bean b = (Bean) getActivity().getApplicationContext();
+
+                        Retrofit retrofit = new Retrofit.Builder()
+                                .baseUrl(b.baseurl)
+                                .addConverterFactory(ScalarsConverterFactory.create())
+                                .addConverterFactory(GsonConverterFactory.create())
+                                .build();
+
+                        AllApiIneterface cr = retrofit.create(AllApiIneterface.class);
+
+
+                        Call<orderBean> call = cr.getOrders(SharePreferenceUtils.getInstance().getString("id") , strDate);
+
+                        call.enqueue(new Callback<orderBean>() {
+                            @Override
+                            public void onResponse(Call<orderBean> call, Response<orderBean> response) {
+
+                                if (response.body().getStatus().equals("1"))
+                                {
+                                    adapter.setData(response.body().getData());
+                                    linear.setVisibility(View.GONE);
+                                }
+                                else
+                                {
+                                    adapter.setData(response.body().getData());
+                                    linear.setVisibility(View.VISIBLE);
+                                    //Toast.makeText(getContext(), response.body().getMessage(), Toast.LENGTH_SHORT).show();
+                                }
+
+                                progress.setVisibility(View.GONE);
+
+                            }
+
+                            @Override
+                            public void onFailure(Call<orderBean> call, Throwable t) {
+                                progress.setVisibility(View.GONE);
+                            }
+                        });
+
+
+
+
+                    }
+                });
+
+
+
+            }
+        });
+
 
         return view;
     }
@@ -64,6 +166,15 @@ public class Bills extends Fragment {
     public void onResume() {
         super.onResume();
 
+        Date c = Calendar.getInstance().getTime();
+        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+        String formattedDate = df.format(c);
+
+        Log.d("dddd" , formattedDate);
+
+        date.setText("Date - " + formattedDate + " (click to change)");
+
+        dd = formattedDate;
 
         progress.setVisibility(View.VISIBLE);
 
@@ -78,7 +189,7 @@ public class Bills extends Fragment {
         AllApiIneterface cr = retrofit.create(AllApiIneterface.class);
 
 
-        Call<orderBean> call = cr.getOrders(SharePreferenceUtils.getInstance().getString("id"));
+        Call<orderBean> call = cr.getOrders(SharePreferenceUtils.getInstance().getString("id") , formattedDate);
 
         call.enqueue(new Callback<orderBean>() {
             @Override
@@ -87,10 +198,13 @@ public class Bills extends Fragment {
                 if (response.body().getStatus().equals("1"))
                 {
                     adapter.setData(response.body().getData());
+                    linear.setVisibility(View.GONE);
                 }
                 else
                 {
-                    Toast.makeText(getContext(), response.body().getMessage(), Toast.LENGTH_SHORT).show();
+                    adapter.setData(response.body().getData());
+                    linear.setVisibility(View.VISIBLE);
+                    //Toast.makeText(getContext(), response.body().getMessage(), Toast.LENGTH_SHORT).show();
                 }
 
                 progress.setVisibility(View.GONE);
@@ -161,12 +275,12 @@ public class Bills extends Fragment {
                     holder.type.setText("REDEEM STORE - " + item.getId());
                     holder.type.setTextColor(Color.parseColor("#689F38"));
 
-                    holder.price.setText("Benefits - " + item.getPrice() + " credits");
+                    holder.price.setText("Price - " + item.getPrice() + " Rs.");
 
                     float pr1 = Float.parseFloat(item.getPrice());
                     float pa1 = Float.parseFloat(item.getCashValue());
 
-                    holder.paid.setText("Pending benefits - " + String.valueOf(pr1 - pa1) + " credits");
+                    holder.paid.setText("Collect from customer - " + String.valueOf(pr1 - pa1) + " Rs.");
 
                     holder.paid.setVisibility(View.VISIBLE);
                     holder.price.setVisibility(View.VISIBLE);
@@ -178,7 +292,7 @@ public class Bills extends Fragment {
                     holder.paid.setVisibility(View.GONE);
                     //holder.price.setVisibility(View.GONE);
 
-                    holder.price.setText("Benefits - " + item.getCashValue() + " credits");
+                    holder.price.setText("Discount - " + item.getCashValue() + " Rs.");
                     break;
             }
 
@@ -239,7 +353,7 @@ public class Bills extends Fragment {
                                     AllApiIneterface cr = retrofit.create(AllApiIneterface.class);
 
 
-                                    Call<orderBean> call2 = cr.getOrders(SharePreferenceUtils.getInstance().getString("id"));
+                                    Call<orderBean> call2 = cr.getOrders(SharePreferenceUtils.getInstance().getString("id") , dd);
 
                                     call2.enqueue(new Callback<orderBean>() {
                                         @Override

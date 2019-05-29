@@ -68,9 +68,11 @@ public class MainActivity extends AppCompatActivity {
 
         cname.setText(lname);
 
-        adapter = new PagerAdapter(getSupportFragmentManager(), 2);
+        adapter = new PagerAdapter(getSupportFragmentManager(), 4);
         pager.setAdapter(adapter);
         tabLayout.setViewPager(pager);
+
+        pager.setOffscreenPageLimit(3);
 
         logout.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -171,6 +173,8 @@ public class MainActivity extends AppCompatActivity {
 
         String[] titles = {
                 "Orders",
+                "Redeem",
+                "Scratch",
                 "Bills"
         };
 
@@ -190,7 +194,16 @@ public class MainActivity extends AppCompatActivity {
             if (i == 0) {
 
                 return new Bills();
-            } else if (i == 1) {
+            }
+            else if (i == 1)
+            {
+                return new Bills12();
+            }
+            else if (i == 2)
+            {
+                return new Bills13();
+            }
+            else if (i == 3) {
                 return new Orders();
             }
             return null;
@@ -198,7 +211,7 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         public int getCount() {
-            return 2;
+            return 4;
         }
     }
 

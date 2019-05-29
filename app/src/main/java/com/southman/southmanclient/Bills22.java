@@ -19,7 +19,6 @@ import android.widget.DatePicker;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.southman.southmanclient.orderPOJO.Datum;
 import com.southman.southmanclient.orderPOJO.orderBean;
@@ -37,7 +36,7 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 import retrofit2.converter.scalars.ScalarsConverterFactory;
 
-public class Bills2 extends Fragment {
+public class Bills22 extends Fragment {
 
     RecyclerView grid;
     GridLayoutManager manager;
@@ -115,7 +114,7 @@ public class Bills2 extends Fragment {
                         AllApiIneterface cr = retrofit.create(AllApiIneterface.class);
 
 
-                        Call<orderBean> call = cr.getOrders3(SharePreferenceUtils.getInstance().getString("id") , strDate);
+                        Call<orderBean> call = cr.getOrders32(SharePreferenceUtils.getInstance().getString("id") , strDate);
 
                         call.enqueue(new Callback<orderBean>() {
                             @Override
@@ -183,7 +182,7 @@ public class Bills2 extends Fragment {
         AllApiIneterface cr = retrofit.create(AllApiIneterface.class);
 
 
-        Call<orderBean> call = cr.getOrders3(SharePreferenceUtils.getInstance().getString("id") , formattedDate);
+        Call<orderBean> call = cr.getOrders32(SharePreferenceUtils.getInstance().getString("id") , formattedDate);
 
         call.enqueue(new Callback<orderBean>() {
             @Override

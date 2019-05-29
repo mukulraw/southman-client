@@ -41,6 +41,7 @@ public class Orders2 extends Fragment {
     ProgressBar progress;
     List<Datum> list;
     BillAdapter adapter;
+    TextView date;
 
     @Nullable
     @Override
@@ -48,10 +49,12 @@ public class Orders2 extends Fragment {
         View view = inflater.inflate(R.layout.bill_layout , container , false);
 
         list = new ArrayList<>();
-
+        date = view.findViewById(R.id.date);
         grid = view.findViewById(R.id.grid);
         manager = new GridLayoutManager(getContext() , 1);
         progress = view.findViewById(R.id.progress);
+
+        date.setVisibility(View.GONE);
 
         adapter = new BillAdapter(getActivity() , list);
 

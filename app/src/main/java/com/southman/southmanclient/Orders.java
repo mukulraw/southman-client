@@ -44,12 +44,17 @@ public class Orders extends Fragment {
     List<Datum> list;
     BillAdapter adapter;
 
+    TextView date;
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.bill_layout , container , false);
 
         list = new ArrayList<>();
+        date = view.findViewById(R.id.date);
+
+        date.setVisibility(View.GONE);
 
         grid = view.findViewById(R.id.grid);
         manager = new GridLayoutManager(getContext() , 1);

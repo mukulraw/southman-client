@@ -54,19 +54,64 @@ public interface AllApiIneterface {
     @Multipart
     @POST("bigboss/api/getOrders.php")
     Call<orderBean> getOrders(
-            @Part("id") String client
+            @Part("id") String client,
+            @Part("date") String date
+    );
+
+    @Multipart
+    @POST("bigboss/api/getOrders12.php")
+    Call<orderBean> getOrders12(
+            @Part("id") String client,
+            @Part("date") String date
+    );
+
+    @Multipart
+    @POST("bigboss/api/getOrders13.php")
+    Call<orderBean> getOrders13(
+            @Part("id") String client,
+            @Part("date") String date
     );
 
     @Multipart
     @POST("bigboss/api/getOrders3.php")
     Call<orderBean> getOrders3(
-            @Part("id") String client
+            @Part("id") String client,
+            @Part("date") String date
+    );
+
+    @Multipart
+    @POST("bigboss/api/getOrders32.php")
+    Call<orderBean> getOrders32(
+            @Part("id") String client,
+            @Part("date") String date
+    );
+
+    @Multipart
+    @POST("bigboss/api/getOrders33.php")
+    Call<orderBean> getOrders33(
+            @Part("id") String client,
+            @Part("date") String date
     );
 
     @Multipart
     @POST("bigboss/api/getOrders2.php")
     Call<orderBean> getOrders2(
-            @Part("id") String client
+            @Part("id") String client,
+            @Part("date") String date
+    );
+
+    @Multipart
+    @POST("bigboss/api/getOrders22.php")
+    Call<orderBean> getOrders22(
+            @Part("id") String client,
+            @Part("date") String date
+    );
+
+    @Multipart
+    @POST("bigboss/api/getOrders23.php")
+    Call<orderBean> getOrders23(
+            @Part("id") String client,
+            @Part("date") String date
     );
 
     @Multipart
@@ -84,7 +129,8 @@ public interface AllApiIneterface {
     @Multipart
     @POST("bigboss/api/getTrans.php")
     Call<transBean> getTrans(
-            @Part("client") String client
+            @Part("client") String client,
+            @Part("date") String date
     );
 
     @GET("bigboss/api/getClients.php")

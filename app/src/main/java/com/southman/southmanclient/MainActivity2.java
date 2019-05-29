@@ -63,9 +63,11 @@ public class MainActivity2 extends AppCompatActivity {
 
         cname.setText(lname);
 
-        adapter = new PagerAdapter(getSupportFragmentManager(), 2);
+        adapter = new PagerAdapter(getSupportFragmentManager(), 4);
         pager.setAdapter(adapter);
         tabLayout.setViewPager(pager);
+
+        pager.setOffscreenPageLimit(3);
 
         rupee.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -150,7 +152,9 @@ public class MainActivity2 extends AppCompatActivity {
     public class PagerAdapter extends FragmentStatePagerAdapter {
 
         String[] titles = {
-                "Orders",
+                "Voucher",
+                "Redeem",
+                "Scratch",
                 "Bills"
         };
 
@@ -170,7 +174,15 @@ public class MainActivity2 extends AppCompatActivity {
             if (i == 0) {
 
                 return new Bills2();
-            } else if (i == 1) {
+            }else if (i == 1)
+            {
+                return new Bills22();
+            }
+            else if (i == 2)
+            {
+                return new Bills23();
+            }
+            else if (i == 3) {
                 return new Orders2();
             }
             return null;
@@ -178,7 +190,7 @@ public class MainActivity2 extends AppCompatActivity {
 
         @Override
         public int getCount() {
-            return 2;
+            return 4;
         }
     }
 
