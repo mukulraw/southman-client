@@ -17,7 +17,10 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.google.firebase.iid.FirebaseInstanceId;
 import com.ogaclejapan.smarttablayout.SmartTabLayout;
+
+import java.io.IOException;
 
 public class MainActivity2 extends AppCompatActivity {
 
@@ -29,7 +32,7 @@ public class MainActivity2 extends AppCompatActivity {
 
     PagerAdapter adapter;
 
-    ImageView logout;
+    ImageView logout, rupee;
 
     TextView cname;
 
@@ -41,7 +44,7 @@ public class MainActivity2 extends AppCompatActivity {
         cname = findViewById(R.id.location);
 
         toolbar = findViewById(R.id.toolbar);
-
+        rupee = findViewById(R.id.rupee);
 
         logout = findViewById(R.id.logout);
 
@@ -63,6 +66,16 @@ public class MainActivity2 extends AppCompatActivity {
         adapter = new PagerAdapter(getSupportFragmentManager(), 2);
         pager.setAdapter(adapter);
         tabLayout.setViewPager(pager);
+
+        rupee.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Intent intent = new Intent(MainActivity2.this, Clients.class);
+                startActivity(intent);
+
+            }
+        });
 
         logout.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -89,9 +102,17 @@ public class MainActivity2 extends AppCompatActivity {
                     @Override
                     public void onClick(View v) {
 
+
+                        try {
+                            FirebaseInstanceId.getInstance().deleteInstanceId();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+
+
                         SharePreferenceUtils.getInstance().deletePref();
 
-                        Intent intent = new Intent(MainActivity2.this , Login.class);
+                        Intent intent = new Intent(MainActivity2.this, Login.class);
                         startActivity(intent);
 
                         finishAffinity();
@@ -122,8 +143,6 @@ public class MainActivity2 extends AppCompatActivity {
 
             }
         });
-
-
 
 
     }

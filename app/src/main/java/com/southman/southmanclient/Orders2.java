@@ -12,6 +12,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -65,6 +67,170 @@ public class Orders2 extends Fragment {
         super.onResume();
 
 
+       loadDara();
+
+
+    }
+
+    class BillAdapter extends RecyclerView.Adapter<BillAdapter.ViewHolder>
+    {
+        Context context;
+        List<Datum> list = new ArrayList<>();
+
+        public BillAdapter(Context context , List<Datum> list)
+        {
+            this.context = context;
+            this.list = list;
+        }
+
+        void setData(List<Datum> list)
+        {
+            this.list = list;
+            notifyDataSetChanged();
+        }
+
+        @NonNull
+        @Override
+        public ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
+            LayoutInflater inflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            View view = inflater.inflate(R.layout.bill_list_model2 , viewGroup , false);
+            return new ViewHolder(view);
+        }
+
+        @Override
+        public void onBindViewHolder(@NonNull ViewHolder holder, int i) {
+
+            final Datum item = list.get(i);
+
+            holder.name.setText(item.getUser());
+            holder.date.setText(item.getCreated());
+
+            final DisplayImageOptions options = new DisplayImageOptions.Builder().cacheInMemory(true).cacheOnDisk(true).resetViewBeforeLoading(false).build();
+            final ImageLoader loader = ImageLoader.getInstance();
+            loader.displayImage(item.getBill() , holder.image , options);
+
+            holder.verify.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+
+
+                    final Dialog dialog = new Dialog(context);
+                    dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                    dialog.setCancelable(true);
+                    dialog.setContentView(R.layout.verify_dialog);
+                    dialog.show();
+
+                    final EditText am = dialog.findViewById(R.id.amount);
+                    Button su = dialog.findViewById(R.id.submit);
+
+                    su.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+
+                            String a = am.getText().toString();
+
+                            if (a.length() > 0)
+                            {
+
+                                progress.setVisibility(View.VISIBLE);
+
+                                Bean b = (Bean) getActivity().getApplicationContext();
+
+                                Retrofit retrofit = new Retrofit.Builder()
+                                        .baseUrl(b.baseurl)
+                                        .addConverterFactory(ScalarsConverterFactory.create())
+                                        .addConverterFactory(GsonConverterFactory.create())
+                                        .build();
+
+                                AllApiIneterface cr = retrofit.create(AllApiIneterface.class);
+
+
+                                Call<billBean> call = cr.verifyBill(item.getId() , a);
+
+                                call.enqueue(new Callback<billBean>() {
+                                    @Override
+                                    public void onResponse(Call<billBean> call, Response<billBean> response) {
+
+                                        Toast.makeText(context, response.body().getMessage(), Toast.LENGTH_SHORT).show();
+
+                                        progress.setVisibility(View.GONE);
+
+                                        dialog.dismiss();
+
+                                        loadDara();
+
+                                    }
+
+                                    @Override
+                                    public void onFailure(Call<billBean> call, Throwable t) {
+                                        progress.setVisibility(View.GONE);
+                                    }
+                                });
+
+
+                            }
+                            else
+                            {
+                                Toast.makeText(context, "Invalid amount", Toast.LENGTH_SHORT).show();
+                            }
+
+                        }
+                    });
+
+
+
+
+
+
+
+                }
+            });
+
+            holder.itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                    Dialog dialog = new Dialog(context);
+                    dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                    dialog.setCancelable(true);
+                    dialog.setContentView(R.layout.zoom_dialog);
+                    dialog.show();
+
+                    ZoomageView zoom = dialog.findViewById(R.id.zoom);
+
+                    loader.displayImage(item.getBill() , zoom , options);
+
+                }
+            });
+
+        }
+
+        @Override
+        public int getItemCount() {
+            return list.size();
+        }
+
+        class ViewHolder extends RecyclerView.ViewHolder
+        {
+            TextView name , date;
+            ImageView image;
+            Button verify;
+
+            public ViewHolder(@NonNull View itemView) {
+                super(itemView);
+
+                name = itemView.findViewById(R.id.textView);
+                date = itemView.findViewById(R.id.textView2);
+                image = itemView.findViewById(R.id.imageView);
+                verify = itemView.findViewById(R.id.verify);
+
+            }
+        }
+    }
+
+    void loadDara()
+    {
         progress.setVisibility(View.VISIBLE);
 
         Bean b = (Bean) getActivity().getApplicationContext();
@@ -102,85 +268,6 @@ public class Orders2 extends Fragment {
                 progress.setVisibility(View.GONE);
             }
         });
-
-
-    }
-
-    class BillAdapter extends RecyclerView.Adapter<BillAdapter.ViewHolder>
-    {
-        Context context;
-        List<Datum> list = new ArrayList<>();
-
-        public BillAdapter(Context context , List<Datum> list)
-        {
-            this.context = context;
-            this.list = list;
-        }
-
-        void setData(List<Datum> list)
-        {
-            this.list = list;
-            notifyDataSetChanged();
-        }
-
-        @NonNull
-        @Override
-        public ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
-            LayoutInflater inflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            View view = inflater.inflate(R.layout.bill_list_model , viewGroup , false);
-            return new ViewHolder(view);
-        }
-
-        @Override
-        public void onBindViewHolder(@NonNull ViewHolder holder, int i) {
-
-            final Datum item = list.get(i);
-
-            holder.name.setText(item.getUser());
-            holder.date.setText(item.getCreated());
-
-            final DisplayImageOptions options = new DisplayImageOptions.Builder().cacheInMemory(true).cacheOnDisk(true).resetViewBeforeLoading(false).build();
-            final ImageLoader loader = ImageLoader.getInstance();
-            loader.displayImage(item.getBill() , holder.image , options);
-
-            holder.itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-
-                    Dialog dialog = new Dialog(context);
-                    dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-                    dialog.setCancelable(true);
-                    dialog.setContentView(R.layout.zoom_dialog);
-                    dialog.show();
-
-                    ZoomageView zoom = dialog.findViewById(R.id.zoom);
-
-                    loader.displayImage(item.getBill() , zoom , options);
-
-                }
-            });
-
-        }
-
-        @Override
-        public int getItemCount() {
-            return list.size();
-        }
-
-        class ViewHolder extends RecyclerView.ViewHolder
-        {
-            TextView name , date;
-            ImageView image;
-
-            public ViewHolder(@NonNull View itemView) {
-                super(itemView);
-
-                name = itemView.findViewById(R.id.textView);
-                date = itemView.findViewById(R.id.textView2);
-                image = itemView.findViewById(R.id.imageView);
-
-            }
-        }
     }
 
 }

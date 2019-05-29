@@ -1,0 +1,106 @@
+package com.southman.southmanclient.transPOJO;
+
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
+
+public class Datum {
+    @SerializedName("id")
+    @Expose
+    private String id;
+    @SerializedName("client")
+    @Expose
+    private String client;
+    @SerializedName("items_purchased")
+    @Expose
+    private String itemsPurchased;
+    @SerializedName("verified_bills_amount")
+    @Expose
+    private String verifiedBillsAmount;
+    @SerializedName("perks_redeemed")
+    @Expose
+    private String perksRedeemed;
+    @SerializedName("cash_rewards_redeemed")
+    @Expose
+    private String cashRewardsRedeemed;
+    @SerializedName("scratch_cards_redeemed")
+    @Expose
+    private String scratchCardsRedeemed;
+    @SerializedName("bills_uploaded")
+    @Expose
+    private String billsUploaded;
+    @SerializedName("created")
+    @Expose
+    private String created;
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public String getClient() {
+        return client;
+    }
+
+    public void setClient(String client) {
+        this.client = client;
+    }
+
+    public String getItemsPurchased() {
+        return itemsPurchased;
+    }
+
+    public void setItemsPurchased(String itemsPurchased) {
+        this.itemsPurchased = itemsPurchased;
+    }
+
+    public String getVerifiedBillsAmount() {
+        return verifiedBillsAmount;
+    }
+
+    public void setVerifiedBillsAmount(String verifiedBillsAmount) {
+        this.verifiedBillsAmount = verifiedBillsAmount;
+    }
+
+    public String getPerksRedeemed() {
+        return perksRedeemed;
+    }
+
+    public void setPerksRedeemed(String perksRedeemed) {
+        this.perksRedeemed = perksRedeemed;
+    }
+
+    public String getCashRewardsRedeemed() {
+        return cashRewardsRedeemed;
+    }
+
+    public void setCashRewardsRedeemed(String cashRewardsRedeemed) {
+        this.cashRewardsRedeemed = cashRewardsRedeemed;
+    }
+
+    public String getScratchCardsRedeemed() {
+        return scratchCardsRedeemed;
+    }
+
+    public void setScratchCardsRedeemed(String scratchCardsRedeemed) {
+        this.scratchCardsRedeemed = scratchCardsRedeemed;
+    }
+
+    public String getBillsUploaded() {
+        return billsUploaded;
+    }
+
+    public void setBillsUploaded(String billsUploaded) {
+        this.billsUploaded = billsUploaded;
+    }
+
+    public String getCreated() {
+        return created;
+    }
+
+    public void setCreated(String created) {
+        this.created = created;
+    }
+}

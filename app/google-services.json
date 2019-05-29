@@ -44,14 +44,6 @@
       },
       "oauth_client": [
         {
-          "client_id": "723362617491-onc2qt6st2ahnvjlb8unl16h0k6q49gf.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.southman.southmanclient",
-            "certificate_hash": "10742171ffe70f9d2c9b463a2c1e6ad5e6993f90"
-          }
-        },
-        {
           "client_id": "723362617491-fhcuki724n6h2mfnn7slo6vcul0jc19o.apps.googleusercontent.com",
           "client_type": 3
         }

@@ -4,6 +4,7 @@ import android.app.SharedElementCallback;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -11,6 +12,9 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.firebase.iid.InstanceIdResult;
 import com.southman.southmanclient.loginPOJO.loginBean;
 
 import java.util.Calendar;
@@ -47,6 +51,19 @@ public class Login extends AppCompatActivity {
 
         pass = findViewById(R.id.password);
 
+
+        FirebaseInstanceId.getInstance().getInstanceId().addOnSuccessListener( Login.this,  new OnSuccessListener<InstanceIdResult>() {
+            @Override
+            public void onSuccess(InstanceIdResult instanceIdResult) {
+                String newToken = instanceIdResult.getToken();
+                Log.e("newToken",newToken);
+
+                SharePreferenceUtils.getInstance().saveString("token" , newToken);
+
+            }
+        });
+
+
         signup.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -80,6 +97,7 @@ public class Login extends AppCompatActivity {
 
                         AllApiIneterface cr = retrofit.create(AllApiIneterface.class);
 
+                        Log.d("asdas" , SharePreferenceUtils.getInstance().getString("token"));
 
                         Call<loginBean> call = cr.login(u, p, SharePreferenceUtils.getInstance().getString("token"));
 

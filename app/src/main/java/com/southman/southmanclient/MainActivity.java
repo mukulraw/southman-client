@@ -17,8 +17,13 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.google.firebase.FirebaseApp;
+import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.firebase.messaging.FirebaseMessagingService;
 import com.makeramen.roundedimageview.RoundedImageView;
 import com.ogaclejapan.smarttablayout.SmartTabLayout;
+
+import java.io.IOException;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -30,7 +35,7 @@ public class MainActivity extends AppCompatActivity {
 
     PagerAdapter adapter;
 
-    ImageView history, logout;
+    ImageView history, logout , rupee;
 
     TextView cname;
 
@@ -45,6 +50,7 @@ public class MainActivity extends AppCompatActivity {
         toolbar = findViewById(R.id.toolbar);
 
         history = findViewById(R.id.history);
+        rupee = findViewById(R.id.rupee);
         logout = findViewById(R.id.logout);
 
         setSupportActionBar(toolbar);
@@ -92,6 +98,12 @@ public class MainActivity extends AppCompatActivity {
                     public void onClick(View v) {
 
 
+                        try {
+                            FirebaseInstanceId.getInstance().deleteInstanceId();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+
 
                         SharePreferenceUtils.getInstance().deletePref();
 
@@ -106,6 +118,21 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
+
+
+        rupee.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Intent intent = new Intent(MainActivity.this , Current.class);
+                intent.putExtra("name" , SharePreferenceUtils.getInstance().getString("name"));
+                intent.putExtra("id" , SharePreferenceUtils.getInstance().getString("id"));
+                intent.putExtra("type" , "client");
+                startActivity(intent);
+
+            }
+        });
+
 
         tabLayout.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
