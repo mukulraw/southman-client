@@ -67,7 +67,7 @@ public class MainActivity2 extends AppCompatActivity {
         pager.setAdapter(adapter);
         tabLayout.setViewPager(pager);
 
-        pager.setOffscreenPageLimit(3);
+        //pager.setOffscreenPageLimit(3);
 
         rupee.setOnClickListener(new View.OnClickListener() {
             @Override

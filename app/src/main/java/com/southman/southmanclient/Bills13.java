@@ -292,7 +292,7 @@ public class Bills13 extends Fragment {
                     holder.paid.setVisibility(View.GONE);
                     //holder.price.setVisibility(View.GONE);
 
-                    holder.price.setText("Discount - " + item.getCashValue() + " Rs.");
+                    holder.price.setText("Discount - Rs." + item.getCashValue());
                     break;
             }
 

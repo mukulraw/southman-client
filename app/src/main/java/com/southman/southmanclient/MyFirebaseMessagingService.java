@@ -66,7 +66,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
         NotificationCompat.Builder builder = new NotificationCompat.Builder(Bean.getContext(), idChannel);
         builder.setContentTitle(Bean.getContext().getString(R.string.app_name))
-                .setSmallIcon(R.drawable.man)
+                .setSmallIcon(R.drawable.ddddd)
                 .setContentIntent(pendingIntent)
                 .setContentText(message);
 

@@ -32,7 +32,7 @@ public class Current extends AppCompatActivity {
 
     Button complete;
 
-    TextView purchase, scratch, perks, cash, bills, amount , history;
+    TextView purchase, scratch, perks, cash, bills, amount , history , fromsoouthman , tosouthman;
     ProgressBar progress;
 
     @Override
@@ -54,6 +54,8 @@ public class Current extends AppCompatActivity {
         amount = findViewById(R.id.amount);
         progress = findViewById(R.id.progress);
         history = findViewById(R.id.history);
+        fromsoouthman = findViewById(R.id.from_southman);
+        tosouthman = findViewById(R.id.to_southman);
 
         if (type.equals("client"))
         {
@@ -204,12 +206,15 @@ public class Current extends AppCompatActivity {
 
                     Data item = response.body().getData();
 
-                    purchase.setText(item.getItemsPurchased() + " Rs.");
-                    scratch.setText(item.getScratchCardsRedeemed() + " Rs.");
+                    purchase.setText("Rs." + item.getItemsPurchased());
+                    scratch.setText("Rs." + item.getScratchCardsRedeemed());
                     perks.setText(item.getPerksRedeemed() + " credits");
-                    cash.setText(item.getCashRewardsRedeemed() + " Rs.");
+                    cash.setText("Rs." + item.getCashRewardsRedeemed());
                     bills.setText(item.getBillsUploaded());
-                    amount.setText(item.getVerifiedBillsAmount() + " Rs.");
+                    amount.setText("Rs." + item.getVerifiedBillsAmount());
+
+                    fromsoouthman.setText("Rs." + item.getFromSouthman());
+                    tosouthman.setText("Rs." + item.getToSouthman());
 
                 }
 

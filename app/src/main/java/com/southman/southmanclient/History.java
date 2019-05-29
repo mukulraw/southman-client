@@ -791,12 +791,12 @@ public class History extends AppCompatActivity {
                 case "cash":
                     holder.type.setText("REDEEM STORE - " + item.getId());
                     holder.type.setTextColor(Color.parseColor("#689F38"));
-                    holder.price.setText("Price - " + item.getPrice() + " Rs.");
+                    holder.price.setText("Price - Rs." + item.getPrice());
 
                     float pr1 = Float.parseFloat(item.getPrice());
                     float pa1 = Float.parseFloat(item.getCashValue());
 
-                    holder.paid.setText("Collect from customer - " + String.valueOf(pr1 - pa1) + " Rs.");
+                    holder.paid.setText("Collect from customer - Rs." + String.valueOf(pr1 - pa1));
 
                     holder.paid.setVisibility(View.VISIBLE);
                     holder.price.setVisibility(View.VISIBLE);
@@ -805,7 +805,7 @@ public class History extends AppCompatActivity {
                 case "scratch":
                     holder.type.setText("SCRATCH CARD - " + item.getId());
 
-                    holder.price.setText("Discount - " + item.getCashValue() + " Rs.");
+                    holder.price.setText("Discount - Rs." + item.getCashValue());
 
                     holder.type.setTextColor(Color.parseColor("#F9A825"));
                     holder.paid.setVisibility(View.GONE);

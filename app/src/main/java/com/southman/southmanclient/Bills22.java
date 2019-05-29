@@ -272,14 +272,14 @@ public class Bills22 extends Fragment {
                 case "cash":
                     holder.type.setText("REDEEM STORE - " + item.getId());
                     holder.type.setTextColor(Color.parseColor("#689F38"));
-                    holder.price.setText("Price - " + item.getPrice() + " Rs.");
+                    holder.price.setText("Price - Rs." + item.getPrice());
 
                     try {
 
                         float pr1 = Float.parseFloat(item.getPrice());
                         float pa1 = Float.parseFloat(item.getCashValue());
 
-                        holder.paid.setText("Collect from customer - " + String.valueOf(pr1 - pa1) + " Rs.");
+                        holder.paid.setText("Collect from customer - Rs." + String.valueOf(pr1 - pa1));
 
                     }catch (Exception e)
                     {
@@ -296,7 +296,7 @@ public class Bills22 extends Fragment {
                     holder.paid.setVisibility(View.GONE);
                     //holder.price.setVisibility(View.GONE);
 
-                    holder.price.setText("Discount - " + item.getCashValue() + " Rs.");
+                    holder.price.setText("Discount - Rs." + item.getCashValue());
                     break;
             }
 

@@ -16,6 +16,10 @@ public class Datum {
     @SerializedName("created")
     @Expose
     private String created;
+    @SerializedName("client")
+    @Expose
+    private String client;
+
 
     public String getId() {
         return id;
@@ -47,5 +51,13 @@ public class Datum {
 
     public void setCreated(String created) {
         this.created = created;
+    }
+
+    public String getClient() {
+        return client;
+    }
+
+    public void setClient(String client) {
+        this.client = client;
     }
 }

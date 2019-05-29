@@ -31,6 +31,12 @@ public class Data {
     @SerializedName("bills_uploaded")
     @Expose
     private String billsUploaded;
+    @SerializedName("to_southman")
+    @Expose
+    private String toSouthman;
+    @SerializedName("from_southman")
+    @Expose
+    private String fromSouthman;
 
     public String getId() {
         return id;
@@ -102,5 +108,21 @@ public class Data {
 
     public void setBillsUploaded(String billsUploaded) {
         this.billsUploaded = billsUploaded;
+    }
+
+    public String getToSouthman() {
+        return toSouthman;
+    }
+
+    public void setToSouthman(String toSouthman) {
+        this.toSouthman = toSouthman;
+    }
+
+    public String getFromSouthman() {
+        return fromSouthman;
+    }
+
+    public void setFromSouthman(String fromSouthman) {
+        this.fromSouthman = fromSouthman;
     }
 }

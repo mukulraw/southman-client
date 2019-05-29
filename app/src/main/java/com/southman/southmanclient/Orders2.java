@@ -15,6 +15,7 @@ import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -42,6 +43,7 @@ public class Orders2 extends Fragment {
     List<Datum> list;
     BillAdapter adapter;
     TextView date;
+    LinearLayout linear;
 
     @Nullable
     @Override
@@ -50,6 +52,7 @@ public class Orders2 extends Fragment {
 
         list = new ArrayList<>();
         date = view.findViewById(R.id.date);
+        linear = view.findViewById(R.id.linear);
         grid = view.findViewById(R.id.grid);
         manager = new GridLayoutManager(getContext() , 1);
         progress = view.findViewById(R.id.progress);
@@ -111,6 +114,8 @@ public class Orders2 extends Fragment {
             final DisplayImageOptions options = new DisplayImageOptions.Builder().cacheInMemory(true).cacheOnDisk(true).resetViewBeforeLoading(false).build();
             final ImageLoader loader = ImageLoader.getInstance();
             loader.displayImage(item.getBill() , holder.image , options);
+
+            holder.code.setText(item.getClient());
 
             holder.verify.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -216,7 +221,7 @@ public class Orders2 extends Fragment {
 
         class ViewHolder extends RecyclerView.ViewHolder
         {
-            TextView name , date;
+            TextView name , date , code;
             ImageView image;
             Button verify;
 
@@ -224,6 +229,7 @@ public class Orders2 extends Fragment {
                 super(itemView);
 
                 name = itemView.findViewById(R.id.textView);
+                code = itemView.findViewById(R.id.textView4);
                 date = itemView.findViewById(R.id.textView2);
                 image = itemView.findViewById(R.id.imageView);
                 verify = itemView.findViewById(R.id.verify);
@@ -256,9 +262,12 @@ public class Orders2 extends Fragment {
                 if (response.body().getStatus().equals("1"))
                 {
                     adapter.setData(response.body().getData());
+                    linear.setVisibility(View.GONE);
                 }
                 else
                 {
+                    linear.setVisibility(View.VISIBLE);
+                    adapter.setData(response.body().getData());
                     Toast.makeText(getContext(), response.body().getMessage(), Toast.LENGTH_SHORT).show();
                 }
 

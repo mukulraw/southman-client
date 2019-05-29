@@ -31,6 +31,13 @@ public class Datum {
     @SerializedName("created")
     @Expose
     private String created;
+    @SerializedName("to_southman")
+    @Expose
+    private String toSouthman;
+    @SerializedName("from_southman")
+    @Expose
+    private String fromSouthman;
+
 
     public String getId() {
         return id;
@@ -102,5 +109,21 @@ public class Datum {
 
     public void setCreated(String created) {
         this.created = created;
+    }
+
+    public String getFromSouthman() {
+        return fromSouthman;
+    }
+
+    public String getToSouthman() {
+        return toSouthman;
+    }
+
+    public void setFromSouthman(String fromSouthman) {
+        this.fromSouthman = fromSouthman;
+    }
+
+    public void setToSouthman(String toSouthman) {
+        this.toSouthman = toSouthman;
     }
 }

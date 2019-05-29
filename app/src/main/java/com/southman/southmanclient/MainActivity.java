@@ -72,7 +72,7 @@ public class MainActivity extends AppCompatActivity {
         pager.setAdapter(adapter);
         tabLayout.setViewPager(pager);
 
-        pager.setOffscreenPageLimit(3);
+        //pager.setOffscreenPageLimit(3);
 
         logout.setOnClickListener(new View.OnClickListener() {
             @Override
