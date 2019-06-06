@@ -52,6 +52,13 @@ public interface AllApiIneterface {
     );
 
     @Multipart
+    @POST("bigboss/api/verifyBill2.php")
+    Call<billBean> verifyBill2(
+            @Part("id") String id,
+            @Part("amount") String amount
+    );
+
+    @Multipart
     @POST("bigboss/api/getOrders.php")
     Call<orderBean> getOrders(
             @Part("id") String client,
@@ -124,6 +131,12 @@ public interface AllApiIneterface {
     @POST("bigboss/api/completeTrans.php")
     Call<currentBean> completeTrans(
             @Part("client") String client
+    );
+
+    @Multipart
+    @POST("bigboss/api/cancelOrder.php")
+    Call<currentBean> cancelOrder(
+            @Part("id") String user
     );
 
     @Multipart

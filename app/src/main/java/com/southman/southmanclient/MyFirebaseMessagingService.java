@@ -9,6 +9,7 @@ import android.graphics.Color;
 import android.os.Build;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
 import com.google.firebase.messaging.FirebaseMessagingService;
@@ -35,6 +36,11 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
     public void onMessageReceived(RemoteMessage remoteMessage) {
 
         Log.d("asdasd" , remoteMessage.getData().toString());
+
+        Intent registrationComplete = new Intent("count");
+
+        LocalBroadcastManager.getInstance(this).sendBroadcast(registrationComplete);
+
 
         JSONObject object = null;
         object = new JSONObject(remoteMessage.getData());

@@ -172,13 +172,12 @@ public class MainActivity extends AppCompatActivity {
     public class PagerAdapter extends FragmentStatePagerAdapter {
 
         String[] titles = {
-                "Orders",
-                "Redeem",
-                "Scratch",
-                "Bills"
+                "Voucher Store",
+                "Bills",
+                "Redeem Store"
         };
 
-        public PagerAdapter(FragmentManager fm, int list) {
+        PagerAdapter(FragmentManager fm, int list) {
             super(fm);
         }
 
@@ -197,21 +196,17 @@ public class MainActivity extends AppCompatActivity {
             }
             else if (i == 1)
             {
-                return new Bills12();
-            }
-            else if (i == 2)
-            {
-                return new Bills13();
-            }
-            else if (i == 3) {
                 return new Orders();
             }
-            return null;
+            else
+            {
+                return new Bills12();
+            }
         }
 
         @Override
         public int getCount() {
-            return 4;
+            return 3;
         }
     }
 

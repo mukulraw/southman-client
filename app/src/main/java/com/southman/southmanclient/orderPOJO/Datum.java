@@ -25,6 +25,21 @@ public class Datum {
     @SerializedName("text")
     @Expose
     private String text;
+    @SerializedName("table_name")
+    @Expose
+    private String tableName;
+    @SerializedName("cash_rewards")
+    @Expose
+    private String cashRewards;
+    @SerializedName("scratch_amount")
+    @Expose
+    private String scratchAmount;
+    @SerializedName("bill")
+    @Expose
+    private String bill;
+    @SerializedName("bill_amount")
+    @Expose
+    private String billAmount;
     @SerializedName("status")
     @Expose
     private String status;
@@ -86,6 +101,46 @@ public class Datum {
 
     public void setText(String text) {
         this.text = text;
+    }
+
+    public String getTableName() {
+        return tableName;
+    }
+
+    public void setTableName(String tableName) {
+        this.tableName = tableName;
+    }
+
+    public String getCashRewards() {
+        return cashRewards;
+    }
+
+    public void setCashRewards(String cashRewards) {
+        this.cashRewards = cashRewards;
+    }
+
+    public String getScratchAmount() {
+        return scratchAmount;
+    }
+
+    public void setScratchAmount(String scratchAmount) {
+        this.scratchAmount = scratchAmount;
+    }
+
+    public String getBill() {
+        return bill;
+    }
+
+    public void setBill(String bill) {
+        this.bill = bill;
+    }
+
+    public String getBillAmount() {
+        return billAmount;
+    }
+
+    public void setBillAmount(String billAmount) {
+        this.billAmount = billAmount;
     }
 
     public String getStatus() {

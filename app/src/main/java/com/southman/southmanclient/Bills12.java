@@ -1,14 +1,20 @@
 package com.southman.southmanclient;
 
 import android.app.Dialog;
+import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Html;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,11 +22,20 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.DatePicker;
+import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.jsibbold.zoomage.ZoomageView;
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.assist.FailReason;
+import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
+import com.southman.southmanclient.billPOJO.billBean;
+import com.southman.southmanclient.currentPOJO.currentBean;
 import com.southman.southmanclient.orderPOJO.Datum;
 import com.southman.southmanclient.orderPOJO.orderBean;
 
@@ -53,17 +68,17 @@ public class Bills12 extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.bill_layout , container , false);
+        View view = inflater.inflate(R.layout.bill_layout, container, false);
 
         list = new ArrayList<>();
-        
+
         linear = view.findViewById(R.id.linear);
         date = view.findViewById(R.id.date);
         grid = view.findViewById(R.id.grid);
-        manager = new GridLayoutManager(getContext() , 1);
+        manager = new GridLayoutManager(getContext(), 1);
         progress = view.findViewById(R.id.progress);
 
-        adapter = new BillAdapter(getActivity() , list);
+        adapter = new BillAdapter(getActivity(), list);
 
         grid.setAdapter(adapter);
         grid.setLayoutManager(manager);
@@ -119,19 +134,16 @@ public class Bills12 extends Fragment {
                         AllApiIneterface cr = retrofit.create(AllApiIneterface.class);
 
 
-                        Call<orderBean> call = cr.getOrders12(SharePreferenceUtils.getInstance().getString("id") , strDate);
+                        Call<orderBean> call = cr.getOrders12(SharePreferenceUtils.getInstance().getString("id"), strDate);
 
                         call.enqueue(new Callback<orderBean>() {
                             @Override
                             public void onResponse(Call<orderBean> call, Response<orderBean> response) {
 
-                                if (response.body().getStatus().equals("1"))
-                                {
+                                if (response.body().getStatus().equals("1")) {
                                     adapter.setData(response.body().getData());
                                     linear.setVisibility(View.GONE);
-                                }
-                                else
-                                {
+                                } else {
                                     adapter.setData(response.body().getData());
                                     linear.setVisibility(View.VISIBLE);
                                     //Toast.makeText(getContext(), response.body().getMessage(), Toast.LENGTH_SHORT).show();
@@ -148,19 +160,33 @@ public class Bills12 extends Fragment {
                         });
 
 
-
-
                     }
                 });
-
 
 
             }
         });
 
 
+        singleReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+
+                if (intent.getAction().equals("count")) {
+                    onResume();
+                }
+
+            }
+        };
+
+        LocalBroadcastManager.getInstance(getContext()).registerReceiver(singleReceiver,
+                new IntentFilter("count"));
+
+
         return view;
     }
+
+    BroadcastReceiver singleReceiver;
 
     @Override
     public void onResume() {
@@ -170,7 +196,7 @@ public class Bills12 extends Fragment {
         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
         String formattedDate = df.format(c);
 
-        Log.d("dddd" , formattedDate);
+        Log.d("dddd", formattedDate);
 
         date.setText("Date - " + formattedDate + " (click to change)");
 
@@ -189,19 +215,16 @@ public class Bills12 extends Fragment {
         AllApiIneterface cr = retrofit.create(AllApiIneterface.class);
 
 
-        Call<orderBean> call = cr.getOrders12(SharePreferenceUtils.getInstance().getString("id") , formattedDate);
+        Call<orderBean> call = cr.getOrders12(SharePreferenceUtils.getInstance().getString("id"), formattedDate);
 
         call.enqueue(new Callback<orderBean>() {
             @Override
             public void onResponse(Call<orderBean> call, Response<orderBean> response) {
 
-                if (response.body().getStatus().equals("1"))
-                {
+                if (response.body().getStatus().equals("1")) {
                     adapter.setData(response.body().getData());
                     linear.setVisibility(View.GONE);
-                }
-                else
-                {
+                } else {
                     adapter.setData(response.body().getData());
                     linear.setVisibility(View.VISIBLE);
                     //Toast.makeText(getContext(), response.body().getMessage(), Toast.LENGTH_SHORT).show();
@@ -220,19 +243,16 @@ public class Bills12 extends Fragment {
 
     }
 
-    class BillAdapter extends RecyclerView.Adapter<BillAdapter.ViewHolder>
-    {
+    class BillAdapter extends RecyclerView.Adapter<BillAdapter.ViewHolder> {
         Context context;
         List<Datum> list = new ArrayList<>();
 
-        public BillAdapter(Context context , List<Datum> list)
-        {
+        public BillAdapter(Context context, List<Datum> list) {
             this.context = context;
             this.list = list;
         }
 
-        void setData(List<Datum> list)
-        {
+        void setData(List<Datum> list) {
             this.list = list;
             notifyDataSetChanged();
         }
@@ -240,63 +260,130 @@ public class Bills12 extends Fragment {
         @NonNull
         @Override
         public ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
-            LayoutInflater inflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            View view = inflater.inflate(R.layout.order_list_model , viewGroup , false);
+            LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            View view = inflater.inflate(R.layout.redeem_list_mode, viewGroup, false);
             return new ViewHolder(view);
         }
 
         @Override
-        public void onBindViewHolder(@NonNull ViewHolder holder, int i) {
+        public void onBindViewHolder(@NonNull final ViewHolder holder, int i) {
 
             final Datum item = list.get(i);
 
-            holder.code.setText("Item - " + item.getCode());
-            holder.date.setText(item.getCreated());
-
-            holder.user.setText(item.getUser());
+            if (item.getStatus().equals("pending"))
+            {
+                holder.verify.setText("VERIFY");
+            }
+            else if (item.getStatus().equals("verified"))
+            {
+                holder.verify.setText("COMPLETE");
+            }
 
             switch (item.getText()) {
                 case "perks":
-                    holder.type.setText("VOUCHER STORE - " + item.getId());
-                    holder.type.setTextColor(Color.parseColor("#009688"));
+                    holder.order.setText("ORDER NO. - " + item.getId());
+                    holder.order.setTextColor(Color.parseColor("#009688"));
 
-                    holder.price.setText("Benefits - " + item.getPrice() + " credits");
+                    //holder.price.setText("Benefits - " + item.getPrice() + " credits");
 
                     float pr = Float.parseFloat(item.getPrice());
                     float pa = Float.parseFloat(item.getCashValue());
 
-                    holder.paid.setText("Pending benefits - " + String.valueOf(pr - pa) + " credits");
-
-                    holder.paid.setVisibility(View.VISIBLE);
-                    holder.price.setVisibility(View.VISIBLE);
+                    //holder.paid.setText("Pending benefits - " + String.valueOf(pr - pa) + " credits");
 
                     break;
                 case "cash":
-                    holder.type.setText("REDEEM STORE - " + item.getId());
-                    holder.type.setTextColor(Color.parseColor("#689F38"));
+                    holder.order.setText("ORDER NO. - " + item.getId() + " (Table - " + item.getTableName() + ")");
+                    holder.customer.setText(item.getUser());
+                    holder.order.setTextColor(Color.parseColor("#689F38"));
 
-                    holder.price.setText("Price - Rs." + item.getPrice());
+                    holder.cash.setText(Html.fromHtml("Rs." + item.getCashRewards()));
+                    holder.scratch.setText(Html.fromHtml("Rs." + item.getScratchAmount()));
 
-                    float pr1 = Float.parseFloat(item.getPrice());
-                    float pa1 = Float.parseFloat(item.getCashValue());
+//                    float pr1 = Float.parseFloat(item.getPrice());
+                    //                  float pa1 = Float.parseFloat(item.getCashValue());
 
-                    holder.paid.setText("Collect from customer - Rs." + String.valueOf(pr1 - pa1));
+                    //                holder.paid.setText("Balance pay - Rs." + String.valueOf(pr1 - pa1));
 
-                    holder.paid.setVisibility(View.VISIBLE);
-                    holder.price.setVisibility(View.VISIBLE);
+                    if (item.getStatus().equals("pending")) {
+
+                        holder.total.setText(Html.fromHtml("unverified"));
+                        holder.collect.setText(Html.fromHtml("unverified"));
+
+                    } else {
+
+                        float c = Float.parseFloat(item.getCashRewards());
+                        float s = Float.parseFloat(item.getScratchAmount());
+                        float t = Float.parseFloat(item.getBillAmount());
+
+                        holder.total.setText(Html.fromHtml("Rs." + item.getBillAmount()));
+                        holder.collect.setText(Html.fromHtml("Rs." + String.valueOf(t - (c + s))));
+
+
+                    }
+
 
                     break;
                 case "scratch":
-                    holder.type.setText("SCRATCH CARD - " + item.getId());
-                    holder.type.setTextColor(Color.parseColor("#F9A825"));
-                    holder.paid.setVisibility(View.GONE);
-                    //holder.price.setVisibility(View.GONE);
+                    holder.order.setText("ORDER NO. - " + item.getId() + " (Table - " + item.getTableName() + ")");
+                    holder.customer.setText(item.getUser());
+                    holder.order.setTextColor(Color.parseColor("#689F38"));
 
-                    holder.price.setText("Discount - " + item.getCashValue() + " Rs.");
+                    holder.cash.setText(Html.fromHtml("Rs." + item.getCashRewards()));
+                    holder.scratch.setText(Html.fromHtml("Rs." + item.getScratchAmount()));
+
+//                    float pr1 = Float.parseFloat(item.getPrice());
+                    //                  float pa1 = Float.parseFloat(item.getCashValue());
+
+                    //                holder.paid.setText("Balance pay - Rs." + String.valueOf(pr1 - pa1));
+
+                    if (item.getStatus().equals("pending")) {
+
+                        holder.total.setText(Html.fromHtml("unverified"));
+                        holder.collect.setText(Html.fromHtml("unverified"));
+
+                    } else {
+
+                        float c = Float.parseFloat(item.getCashRewards());
+                        float s = Float.parseFloat(item.getScratchAmount());
+                        float t = Float.parseFloat(item.getBillAmount());
+
+                        holder.total.setText(Html.fromHtml("Rs." + item.getBillAmount()));
+                        holder.collect.setText(Html.fromHtml("Rs." + String.valueOf(t - (c + s))));
+
+
+                    }
                     break;
             }
 
-            holder.complete.setOnClickListener(new View.OnClickListener() {
+
+            final DisplayImageOptions options = new DisplayImageOptions.Builder().cacheOnDisk(true).cacheInMemory(true).resetViewBeforeLoading(false).build();
+
+
+            final ImageLoader loader = ImageLoader.getInstance();
+
+            loader.displayImage(item.getBill() , holder.bill , options);
+
+            holder.bill.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                    Dialog dialog = new Dialog(context);
+                    dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                    dialog.setCancelable(true);
+                    dialog.setContentView(R.layout.zoom_dialog);
+                    dialog.show();
+
+                    ZoomageView zoom = dialog.findViewById(R.id.zoom);
+
+                    loader.displayImage(item.getBill() , zoom , options);
+
+
+                }
+            });
+
+
+            /*holder.complete.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
 
@@ -353,18 +440,15 @@ public class Bills12 extends Fragment {
                                     AllApiIneterface cr = retrofit.create(AllApiIneterface.class);
 
 
-                                    Call<orderBean> call2 = cr.getOrders12(SharePreferenceUtils.getInstance().getString("id") , dd);
+                                    Call<orderBean> call2 = cr.getOrders12(SharePreferenceUtils.getInstance().getString("id"), dd);
 
                                     call2.enqueue(new Callback<orderBean>() {
                                         @Override
                                         public void onResponse(Call<orderBean> call, Response<orderBean> response2) {
 
-                                            if (response2.body().getStatus().equals("1"))
-                                            {
+                                            if (response2.body().getStatus().equals("1")) {
                                                 adapter.setData(response2.body().getData());
-                                            }
-                                            else
-                                            {
+                                            } else {
                                                 Toast.makeText(getContext(), response2.body().getMessage(), Toast.LENGTH_SHORT).show();
                                             }
 
@@ -390,6 +474,212 @@ public class Bills12 extends Fragment {
                     });
 
                 }
+            });*/
+
+            holder.cancel.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+
+
+                    final Dialog dialog = new Dialog(context);
+                    dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                    dialog.setCancelable(false);
+                    dialog.setContentView(R.layout.cancel_dialog);
+                    dialog.show();
+
+                    Button ookk = dialog.findViewById(R.id.button2);
+                    Button canc = dialog.findViewById(R.id.button4);
+
+                    canc.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            dialog.dismiss();
+                        }
+                    });
+
+                    ookk.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+
+                            dialog.dismiss();
+
+                            progress.setVisibility(View.VISIBLE);
+
+                            Bean b = (Bean) getActivity().getApplicationContext();
+
+                            Retrofit retrofit = new Retrofit.Builder()
+                                    .baseUrl(b.baseurl)
+                                    .addConverterFactory(ScalarsConverterFactory.create())
+                                    .addConverterFactory(GsonConverterFactory.create())
+                                    .build();
+
+                            AllApiIneterface cr = retrofit.create(AllApiIneterface.class);
+
+                            Call<currentBean> call = cr.cancelOrder(item.getId());
+
+                            call.enqueue(new Callback<currentBean>() {
+                                @Override
+                                public void onResponse(Call<currentBean> call, Response<currentBean> response) {
+
+                                    Toast.makeText(context, response.body().getMessage(), Toast.LENGTH_SHORT).show();
+
+                                    progress.setVisibility(View.GONE);
+
+                                    onResume();
+                                }
+
+                                @Override
+                                public void onFailure(Call<currentBean> call, Throwable t) {
+                                    progress.setVisibility(View.GONE);
+                                }
+                            });
+
+
+                        }
+                    });
+
+
+
+                }
+            });
+
+
+            holder.verify.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    String tt = holder.verify.getText().toString();
+
+                    if (tt.equals("VERIFY"))
+                    {
+
+                        final Dialog dialog = new Dialog(context);
+                        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                        dialog.setCancelable(true);
+                        dialog.setContentView(R.layout.verify_dialog);
+                        dialog.show();
+
+                        final EditText am = dialog.findViewById(R.id.amount);
+                        Button su = dialog.findViewById(R.id.submit);
+
+                        su.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+
+                                String a = am.getText().toString();
+
+                                if (a.length() > 0)
+                                {
+
+                                    progress.setVisibility(View.VISIBLE);
+
+                                    Bean b = (Bean) getActivity().getApplicationContext();
+
+                                    Retrofit retrofit = new Retrofit.Builder()
+                                            .baseUrl(b.baseurl)
+                                            .addConverterFactory(ScalarsConverterFactory.create())
+                                            .addConverterFactory(GsonConverterFactory.create())
+                                            .build();
+
+                                    AllApiIneterface cr = retrofit.create(AllApiIneterface.class);
+
+
+                                    Call<billBean> call = cr.verifyBill2(item.getId() , a);
+
+                                    call.enqueue(new Callback<billBean>() {
+                                        @Override
+                                        public void onResponse(Call<billBean> call, Response<billBean> response) {
+
+                                            Toast.makeText(context, response.body().getMessage(), Toast.LENGTH_SHORT).show();
+
+                                            progress.setVisibility(View.GONE);
+
+                                            dialog.dismiss();
+
+                                            onResume();
+
+                                        }
+
+                                        @Override
+                                        public void onFailure(Call<billBean> call, Throwable t) {
+                                            progress.setVisibility(View.GONE);
+                                        }
+                                    });
+
+
+                                }
+                                else
+                                {
+                                    Toast.makeText(context, "Invalid amount", Toast.LENGTH_SHORT).show();
+                                }
+
+                            }
+                        });
+
+
+
+                    }
+                    else
+                    {
+
+
+                        final Dialog dialog = new Dialog(context);
+                        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                        dialog.setCancelable(false);
+                        dialog.setContentView(R.layout.complete_dialog);
+                        dialog.show();
+
+                        Button ookk = dialog.findViewById(R.id.button2);
+                        Button canc = dialog.findViewById(R.id.button4);
+
+                        canc.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                dialog.dismiss();
+                            }
+                        });
+
+                        ookk.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+
+                                Bean b = (Bean) getActivity().getApplicationContext();
+
+                                Retrofit retrofit = new Retrofit.Builder()
+                                        .baseUrl(b.baseurl)
+                                        .addConverterFactory(ScalarsConverterFactory.create())
+                                        .addConverterFactory(GsonConverterFactory.create())
+                                        .build();
+
+                                AllApiIneterface cr = retrofit.create(AllApiIneterface.class);
+
+                                Call<orderBean> call = cr.completeOrder(item.getId());
+
+                                call.enqueue(new Callback<orderBean>() {
+                                    @Override
+                                    public void onResponse(Call<orderBean> call, Response<orderBean> response) {
+
+                                        dialog.dismiss();
+
+                                        Toast.makeText(context, response.body().getMessage(), Toast.LENGTH_SHORT).show();
+
+                                        onResume();
+
+                                    }
+
+                                    @Override
+                                    public void onFailure(Call<orderBean> call, Throwable t) {
+
+                                    }
+                                });
+
+                            }
+                        });
+
+
+                    }
+
+                }
             });
 
         }
@@ -399,24 +689,36 @@ public class Bills12 extends Fragment {
             return list.size();
         }
 
-        class ViewHolder extends RecyclerView.ViewHolder
-        {
-            TextView code, date, type , user , price , paid;
-            Button complete;
+        class ViewHolder extends RecyclerView.ViewHolder {
+            TextView order, customer, cash, scratch, total, collect;
+            Button verify, cancel;
+            ImageView bill;
 
             ViewHolder(@NonNull View itemView) {
                 super(itemView);
-                code = itemView.findViewById(R.id.code);
-                date = itemView.findViewById(R.id.date);
-                type = itemView.findViewById(R.id.type);
-                user = itemView.findViewById(R.id.user);
-                price = itemView.findViewById(R.id.price);
-                paid = itemView.findViewById(R.id.paid);
-                complete = itemView.findViewById(R.id.complete);
+                order = itemView.findViewById(R.id.order);
+                customer = itemView.findViewById(R.id.user);
+                cash = itemView.findViewById(R.id.cash);
+                scratch = itemView.findViewById(R.id.scratch);
+                total = itemView.findViewById(R.id.total);
+                collect = itemView.findViewById(R.id.collect);
+                verify = itemView.findViewById(R.id.verify);
+                cancel = itemView.findViewById(R.id.cancel);
+                bill = itemView.findViewById(R.id.bill);
 
             }
         }
     }
+
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+
+        LocalBroadcastManager.getInstance(getContext()).unregisterReceiver(singleReceiver);
+
+    }
+
 
 
 }
