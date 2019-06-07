@@ -305,7 +305,7 @@ public class Bills12 extends Fragment {
 
                     //                holder.paid.setText("Balance pay - Rs." + String.valueOf(pr1 - pa1));
 
-                    if (item.getStatus().equals("pending")) {
+                    if (item.getBillAmount().equals("")) {
 
                         holder.total.setText(Html.fromHtml("unverified"));
                         holder.collect.setText(Html.fromHtml("unverified"));
@@ -337,7 +337,7 @@ public class Bills12 extends Fragment {
 
                     //                holder.paid.setText("Balance pay - Rs." + String.valueOf(pr1 - pa1));
 
-                    if (item.getStatus().equals("pending")) {
+                    if (item.getBillAmount().equals("")) {
 
                         holder.total.setText(Html.fromHtml("unverified"));
                         holder.collect.setText(Html.fromHtml("unverified"));

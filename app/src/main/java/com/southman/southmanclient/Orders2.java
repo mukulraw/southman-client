@@ -117,6 +117,8 @@ public class Orders2 extends Fragment {
 
             holder.code.setText(item.getClient());
 
+
+
             holder.verify.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

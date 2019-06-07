@@ -9,6 +9,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Html;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,10 +17,14 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.DatePicker;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.jsibbold.zoomage.ZoomageView;
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
+import com.nostra13.universalimageloader.core.ImageLoader;
 import com.southman.southmanclient.orderPOJO.Datum;
 import com.southman.southmanclient.orderPOJO.orderBean;
 
@@ -233,7 +238,7 @@ public class Bills22 extends Fragment {
         @Override
         public ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
             LayoutInflater inflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            View view = inflater.inflate(R.layout.order_list_model , viewGroup , false);
+            View view = inflater.inflate(R.layout.redeem_list_mode , viewGroup , false);
             return new ViewHolder(view);
         }
 
@@ -242,65 +247,113 @@ public class Bills22 extends Fragment {
 
             final Datum item = list.get(i);
 
-            holder.code.setText("Item - " + item.getCode());
-            holder.date.setText(item.getCreated());
 
-            holder.user.setText(item.getUser());
+            holder.verify.setText(item.getStatus());
+
+            holder.cancel.setVisibility(View.GONE);
 
             switch (item.getText()) {
                 case "perks":
-                    holder.type.setText("VOUCHER STORE - " + item.getId());
-                    holder.type.setTextColor(Color.parseColor("#009688"));
-                    holder.price.setText("Benefits - " + item.getPrice() + " credits");
+                    holder.order.setText("ORDER NO. - " + item.getId());
+                    holder.order.setTextColor(Color.parseColor("#009688"));
 
-                    try {
+                    //holder.price.setText("Benefits - " + item.getPrice() + " credits");
 
-                        float pr = Float.parseFloat(item.getPrice());
-                        float pa = Float.parseFloat(item.getCashValue());
+                    float pr = Float.parseFloat(item.getPrice());
+                    float pa = Float.parseFloat(item.getCashValue());
 
-                        holder.paid.setText("Pending benefits - " + String.valueOf(pr - pa) + " credits");
-
-                    }catch (Exception e)
-                    {
-                        e.printStackTrace();
-                    }
-
-                    holder.paid.setVisibility(View.VISIBLE);
-                    holder.price.setVisibility(View.VISIBLE);
+                    //holder.paid.setText("Pending benefits - " + String.valueOf(pr - pa) + " credits");
 
                     break;
                 case "cash":
-                    holder.type.setText("REDEEM STORE - " + item.getId());
-                    holder.type.setTextColor(Color.parseColor("#689F38"));
-                    holder.price.setText("Price - Rs." + item.getPrice());
+                    holder.order.setText("ORDER NO. - " + item.getId() + " (Table - " + item.getTableName() + ")");
+                    holder.customer.setText(item.getUser());
+                    holder.order.setTextColor(Color.parseColor("#689F38"));
 
-                    try {
+                    holder.cash.setText(Html.fromHtml("Rs." + item.getCashRewards()));
+                    holder.scratch.setText(Html.fromHtml("Rs." + item.getScratchAmount()));
 
-                        float pr1 = Float.parseFloat(item.getPrice());
-                        float pa1 = Float.parseFloat(item.getCashValue());
+//                    float pr1 = Float.parseFloat(item.getPrice());
+                    //                  float pa1 = Float.parseFloat(item.getCashValue());
 
-                        holder.paid.setText("Collect from customer - Rs." + String.valueOf(pr1 - pa1));
+                    //                holder.paid.setText("Balance pay - Rs." + String.valueOf(pr1 - pa1));
 
-                    }catch (Exception e)
-                    {
-                        e.printStackTrace();
+                    if (item.getBillAmount().equals("")) {
+
+                        holder.total.setText(Html.fromHtml("unverified"));
+                        holder.collect.setText(Html.fromHtml("unverified"));
+
+                    } else {
+
+                        float c = Float.parseFloat(item.getCashRewards());
+                        float s = Float.parseFloat(item.getScratchAmount());
+                        float t = Float.parseFloat(item.getBillAmount());
+
+                        holder.total.setText(Html.fromHtml("Rs." + item.getBillAmount()));
+                        holder.collect.setText(Html.fromHtml("Rs." + String.valueOf(t - (c + s))));
+
+
                     }
 
-                    holder.paid.setVisibility(View.VISIBLE);
-                    holder.price.setVisibility(View.VISIBLE);
 
                     break;
                 case "scratch":
-                    holder.type.setText("SCRATCH CARD - " + item.getId());
-                    holder.type.setTextColor(Color.parseColor("#F9A825"));
-                    holder.paid.setVisibility(View.GONE);
-                    //holder.price.setVisibility(View.GONE);
+                    holder.order.setText("ORDER NO. - " + item.getId() + " (Table - " + item.getTableName() + ")");
+                    holder.customer.setText(item.getUser());
+                    holder.order.setTextColor(Color.parseColor("#689F38"));
 
-                    holder.price.setText("Discount - Rs." + item.getCashValue());
+                    holder.cash.setText(Html.fromHtml("Rs." + item.getCashRewards()));
+                    holder.scratch.setText(Html.fromHtml("Rs." + item.getScratchAmount()));
+
+//                    float pr1 = Float.parseFloat(item.getPrice());
+                    //                  float pa1 = Float.parseFloat(item.getCashValue());
+
+                    //                holder.paid.setText("Balance pay - Rs." + String.valueOf(pr1 - pa1));
+
+                    if (item.getBillAmount().equals("")) {
+
+                        holder.total.setText(Html.fromHtml("unverified"));
+                        holder.collect.setText(Html.fromHtml("unverified"));
+
+                    } else {
+
+                        float c = Float.parseFloat(item.getCashRewards());
+                        float s = Float.parseFloat(item.getScratchAmount());
+                        float t = Float.parseFloat(item.getBillAmount());
+
+                        holder.total.setText(Html.fromHtml("Rs." + item.getBillAmount()));
+                        holder.collect.setText(Html.fromHtml("Rs." + String.valueOf(t - (c + s))));
+
+
+                    }
                     break;
             }
 
-            holder.complete.setText(item.getStatus());
+
+            final DisplayImageOptions options = new DisplayImageOptions.Builder().cacheOnDisk(true).cacheInMemory(true).resetViewBeforeLoading(false).build();
+
+
+            final ImageLoader loader = ImageLoader.getInstance();
+
+            loader.displayImage(item.getBill() , holder.bill , options);
+
+            holder.bill.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                    Dialog dialog = new Dialog(context);
+                    dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                    dialog.setCancelable(true);
+                    dialog.setContentView(R.layout.zoom_dialog);
+                    dialog.show();
+
+                    ZoomageView zoom = dialog.findViewById(R.id.zoom);
+
+                    loader.displayImage(item.getBill() , zoom , options);
+
+
+                }
+            });
 
         }
 
@@ -311,19 +364,21 @@ public class Bills22 extends Fragment {
 
         class ViewHolder extends RecyclerView.ViewHolder
         {
-            TextView code, date, type , user , price , paid;
-            Button complete;
+            TextView order, customer, cash, scratch, total, collect;
+            Button verify, cancel;
+            ImageView bill;
 
             ViewHolder(@NonNull View itemView) {
                 super(itemView);
-                code = itemView.findViewById(R.id.code);
-                date = itemView.findViewById(R.id.date);
-                type = itemView.findViewById(R.id.type);
-                user = itemView.findViewById(R.id.user);
-                price = itemView.findViewById(R.id.price);
-                paid = itemView.findViewById(R.id.paid);
-                complete = itemView.findViewById(R.id.complete);
-
+                order = itemView.findViewById(R.id.order);
+                customer = itemView.findViewById(R.id.user);
+                cash = itemView.findViewById(R.id.cash);
+                scratch = itemView.findViewById(R.id.scratch);
+                total = itemView.findViewById(R.id.total);
+                collect = itemView.findViewById(R.id.collect);
+                verify = itemView.findViewById(R.id.verify);
+                cancel = itemView.findViewById(R.id.cancel);
+                bill = itemView.findViewById(R.id.bill);
             }
         }
     }
