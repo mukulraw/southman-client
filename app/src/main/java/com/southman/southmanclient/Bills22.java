@@ -238,7 +238,7 @@ public class Bills22 extends Fragment {
         @Override
         public ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
             LayoutInflater inflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            View view = inflater.inflate(R.layout.redeem_list_mode , viewGroup , false);
+            View view = inflater.inflate(R.layout.redeem_list_mode2 , viewGroup , false);
             return new ViewHolder(view);
         }
 
@@ -251,6 +251,8 @@ public class Bills22 extends Fragment {
             holder.verify.setText(item.getStatus());
 
             holder.cancel.setVisibility(View.GONE);
+
+            holder.client.setText(item.getClient());
 
             switch (item.getText()) {
                 case "perks":
@@ -364,7 +366,7 @@ public class Bills22 extends Fragment {
 
         class ViewHolder extends RecyclerView.ViewHolder
         {
-            TextView order, customer, cash, scratch, total, collect;
+            TextView order, customer, cash, scratch, total, collect , client;
             Button verify, cancel;
             ImageView bill;
 
@@ -379,6 +381,7 @@ public class Bills22 extends Fragment {
                 verify = itemView.findViewById(R.id.verify);
                 cancel = itemView.findViewById(R.id.cancel);
                 bill = itemView.findViewById(R.id.bill);
+                client = itemView.findViewById(R.id.client);
             }
         }
     }

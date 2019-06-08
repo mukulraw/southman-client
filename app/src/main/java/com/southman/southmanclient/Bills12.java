@@ -279,6 +279,17 @@ public class Bills12 extends Fragment {
                 holder.verify.setText("COMPLETE");
             }
 
+            holder.generate.setText("Table " + item.getTableName() + " is asking for final bill");
+
+            if (item.getGenerate().equals("no"))
+            {
+                holder.generate.setVisibility(View.GONE);
+            }
+            else
+            {
+                holder.generate.setVisibility(View.VISIBLE);
+            }
+
             switch (item.getText()) {
                 case "perks":
                     holder.order.setText("ORDER NO. - " + item.getId());
@@ -690,7 +701,7 @@ public class Bills12 extends Fragment {
         }
 
         class ViewHolder extends RecyclerView.ViewHolder {
-            TextView order, customer, cash, scratch, total, collect;
+            TextView order, customer, cash, scratch, total, collect , generate;
             Button verify, cancel;
             ImageView bill;
 
@@ -705,6 +716,7 @@ public class Bills12 extends Fragment {
                 verify = itemView.findViewById(R.id.verify);
                 cancel = itemView.findViewById(R.id.cancel);
                 bill = itemView.findViewById(R.id.bill);
+                generate = itemView.findViewById(R.id.generate);
 
             }
         }

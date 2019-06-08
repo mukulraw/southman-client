@@ -59,7 +59,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         String idChannel = "southman messages";
         Intent mainIntent;
 
-        mainIntent = new Intent(Bean.getContext(), MyFirebaseMessagingService.class);
+        mainIntent = new Intent(Bean.getContext(), Splash.class);
 
         PendingIntent pendingIntent = PendingIntent.getActivity(Bean.getContext(), 0, mainIntent, 0);
 
@@ -74,6 +74,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         builder.setContentTitle(Bean.getContext().getString(R.string.app_name))
                 .setSmallIcon(R.drawable.ddddd)
                 .setContentIntent(pendingIntent)
+                .setAutoCancel(true)
                 .setContentText(message);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {

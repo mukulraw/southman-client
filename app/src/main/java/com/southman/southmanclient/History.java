@@ -830,6 +830,8 @@ public class History extends AppCompatActivity {
 
             holder.cancel.setVisibility(View.GONE);
 
+            holder.generate.setVisibility(View.GONE);
+
             switch (item.getText()) {
                 case "perks":
                     holder.order.setText("ORDER NO. - " + item.getId());
@@ -943,7 +945,7 @@ public class History extends AppCompatActivity {
         }
 
         class ViewHolder extends RecyclerView.ViewHolder {
-            TextView order, customer, cash, scratch, total, collect;
+            TextView order, customer, cash, scratch, total, collect , generate;
             Button verify, cancel;
             ImageView bill;
 
@@ -959,6 +961,7 @@ public class History extends AppCompatActivity {
                 verify = itemView.findViewById(R.id.verify);
                 cancel = itemView.findViewById(R.id.cancel);
                 bill = itemView.findViewById(R.id.bill);
+                generate = itemView.findViewById(R.id.generate);
             }
         }
     }
