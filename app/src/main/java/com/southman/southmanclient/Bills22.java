@@ -268,7 +268,14 @@ public class Bills22 extends Fragment {
 
                     break;
                 case "cash":
-                    holder.order.setText("ORDER NO. - " + item.getId() + " (Table - " + item.getTableName() + ")");
+                    if (item.getTableName().equals(""))
+                    {
+                        holder.order.setText("ORDER NO. - " + item.getId());
+                    }
+                    else
+                    {
+                        holder.order.setText("ORDER NO. - " + item.getId() + " (Table - " + item.getTableName() + ")");
+                    }
                     holder.customer.setText(item.getUser());
                     holder.order.setTextColor(Color.parseColor("#689F38"));
 
@@ -300,7 +307,14 @@ public class Bills22 extends Fragment {
 
                     break;
                 case "scratch":
-                    holder.order.setText("ORDER NO. - " + item.getId() + " (Table - " + item.getTableName() + ")");
+                    if (item.getTableName().equals(""))
+                    {
+                        holder.order.setText("ORDER NO. - " + item.getId());
+                    }
+                    else
+                    {
+                        holder.order.setText("ORDER NO. - " + item.getId() + " (Table - " + item.getTableName() + ")");
+                    }
                     holder.customer.setText(item.getUser());
                     holder.order.setTextColor(Color.parseColor("#689F38"));
 
