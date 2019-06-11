@@ -270,23 +270,25 @@ public class Bills12 extends Fragment {
 
             final Datum item = list.get(i);
 
-            if (item.getStatus().equals("pending"))
-            {
+            if (item.getStatus().equals("pending")) {
                 holder.verify.setText("VERIFY");
-            }
-            else if (item.getStatus().equals("verified"))
-            {
+            } else if (item.getStatus().equals("verified")) {
                 holder.verify.setText("COMPLETE");
             }
 
-            holder.generate.setText("Table " + item.getTableName() + " is asking for final bill");
+            if (item.getTableName().equals("")) {
 
-            if (item.getGenerate().equals("no"))
-            {
-                holder.generate.setVisibility(View.GONE);
+                holder.generate.setText("Table " + item.getTableName() + " is asking for final bill");
+
+            } else {
+
+                holder.generate.setText("Customer is asking for final bill");
+
             }
-            else
-            {
+
+            if (item.getGenerate().equals("no")) {
+                holder.generate.setVisibility(View.GONE);
+            } else {
                 holder.generate.setVisibility(View.VISIBLE);
             }
 
@@ -304,12 +306,9 @@ public class Bills12 extends Fragment {
 
                     break;
                 case "cash":
-                    if (item.getTableName().equals(""))
-                    {
+                    if (item.getTableName().equals("")) {
                         holder.order.setText("ORDER NO. - " + item.getId());
-                    }
-                    else
-                    {
+                    } else {
                         holder.order.setText("ORDER NO. - " + item.getId() + " (Table - " + item.getTableName() + ")");
                     }
                     holder.customer.setText(item.getUser());
@@ -343,12 +342,9 @@ public class Bills12 extends Fragment {
 
                     break;
                 case "scratch":
-                    if (item.getTableName().equals(""))
-                    {
+                    if (item.getTableName().equals("")) {
                         holder.order.setText("ORDER NO. - " + item.getId());
-                    }
-                    else
-                    {
+                    } else {
                         holder.order.setText("ORDER NO. - " + item.getId() + " (Table - " + item.getTableName() + ")");
                     }
                     holder.customer.setText(item.getUser());
@@ -387,7 +383,7 @@ public class Bills12 extends Fragment {
 
             final ImageLoader loader = ImageLoader.getInstance();
 
-            loader.displayImage(item.getBill() , holder.bill , options);
+            loader.displayImage(item.getBill(), holder.bill, options);
 
             holder.bill.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -401,7 +397,7 @@ public class Bills12 extends Fragment {
 
                     ZoomageView zoom = dialog.findViewById(R.id.zoom);
 
-                    loader.displayImage(item.getBill() , zoom , options);
+                    loader.displayImage(item.getBill(), zoom, options);
 
 
                 }
@@ -506,7 +502,6 @@ public class Bills12 extends Fragment {
                 public void onClick(View v) {
 
 
-
                     final Dialog dialog = new Dialog(context);
                     dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
                     dialog.setCancelable(false);
@@ -565,7 +560,6 @@ public class Bills12 extends Fragment {
                     });
 
 
-
                 }
             });
 
@@ -575,8 +569,7 @@ public class Bills12 extends Fragment {
                 public void onClick(View v) {
                     String tt = holder.verify.getText().toString();
 
-                    if (tt.equals("VERIFY"))
-                    {
+                    if (tt.equals("VERIFY")) {
 
                         final Dialog dialog = new Dialog(context);
                         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -593,8 +586,7 @@ public class Bills12 extends Fragment {
 
                                 String a = am.getText().toString();
 
-                                if (a.length() > 0)
-                                {
+                                if (a.length() > 0) {
 
                                     progress.setVisibility(View.VISIBLE);
 
@@ -609,7 +601,7 @@ public class Bills12 extends Fragment {
                                     AllApiIneterface cr = retrofit.create(AllApiIneterface.class);
 
 
-                                    Call<billBean> call = cr.verifyBill2(item.getId() , a);
+                                    Call<billBean> call = cr.verifyBill2(item.getId(), a);
 
                                     call.enqueue(new Callback<billBean>() {
                                         @Override
@@ -632,9 +624,7 @@ public class Bills12 extends Fragment {
                                     });
 
 
-                                }
-                                else
-                                {
+                                } else {
                                     Toast.makeText(context, "Invalid amount", Toast.LENGTH_SHORT).show();
                                 }
 
@@ -642,10 +632,7 @@ public class Bills12 extends Fragment {
                         });
 
 
-
-                    }
-                    else
-                    {
+                    } else {
 
 
                         final Dialog dialog = new Dialog(context);
@@ -715,7 +702,7 @@ public class Bills12 extends Fragment {
         }
 
         class ViewHolder extends RecyclerView.ViewHolder {
-            TextView order, customer, cash, scratch, total, collect , generate;
+            TextView order, customer, cash, scratch, total, collect, generate;
             Button verify, cancel;
             ImageView bill;
 
@@ -744,7 +731,6 @@ public class Bills12 extends Fragment {
         LocalBroadcastManager.getInstance(getContext()).unregisterReceiver(singleReceiver);
 
     }
-
 
 
 }
