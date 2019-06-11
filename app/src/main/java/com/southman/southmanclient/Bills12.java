@@ -276,7 +276,7 @@ public class Bills12 extends Fragment {
                 holder.verify.setText("COMPLETE");
             }
 
-            if (item.getTableName().equals("")) {
+            if (!item.getTableName().equals("")) {
 
                 holder.generate.setText("Table " + item.getTableName() + " is asking for final bill");
 
