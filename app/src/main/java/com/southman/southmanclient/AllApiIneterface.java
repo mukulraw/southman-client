@@ -17,7 +17,7 @@ public interface AllApiIneterface {
 
 
     @Multipart
-    @POST("bigboss/api/login.php")
+    @POST("southman/api/login.php")
     Call<loginBean> login(
             @Part("username") String username,
             @Part("password") String password,
@@ -25,7 +25,7 @@ public interface AllApiIneterface {
     );
 
     @Multipart
-    @POST("bigboss/api/register2.php")
+    @POST("southman/api/register2.php")
     Call<loginBean> register(
             @Part("name") String name,
             @Part("phone") String phone,
@@ -33,124 +33,124 @@ public interface AllApiIneterface {
     );
 
     @Multipart
-    @POST("bigboss/api/getBills.php")
+    @POST("southman/api/getBills.php")
     Call<billBean> getBills(
             @Part("client") String client
     );
 
     @Multipart
-    @POST("bigboss/api/getBills3.php")
+    @POST("southman/api/getBills3.php")
     Call<billBean> getBills3(
             @Part("client") String client
     );
 
     @Multipart
-    @POST("bigboss/api/verifyBill.php")
+    @POST("southman/api/verifyBill.php")
     Call<billBean> verifyBill(
             @Part("id") String id,
             @Part("amount") String amount
     );
 
     @Multipart
-    @POST("bigboss/api/verifyBill2.php")
+    @POST("southman/api/verifyBill2.php")
     Call<billBean> verifyBill2(
             @Part("id") String id,
             @Part("amount") String amount
     );
 
     @Multipart
-    @POST("bigboss/api/getOrders.php")
+    @POST("southman/api/getOrders.php")
     Call<orderBean> getOrders(
             @Part("id") String client,
             @Part("date") String date
     );
 
     @Multipart
-    @POST("bigboss/api/getOrders12.php")
+    @POST("southman/api/getOrders12.php")
     Call<orderBean> getOrders12(
             @Part("id") String client,
             @Part("date") String date
     );
 
     @Multipart
-    @POST("bigboss/api/getOrders13.php")
+    @POST("southman/api/getOrders13.php")
     Call<orderBean> getOrders13(
             @Part("id") String client,
             @Part("date") String date
     );
 
     @Multipart
-    @POST("bigboss/api/getOrders3.php")
+    @POST("southman/api/getOrders3.php")
     Call<orderBean> getOrders3(
             @Part("id") String client,
             @Part("date") String date
     );
 
     @Multipart
-    @POST("bigboss/api/getOrders32.php")
+    @POST("southman/api/getOrders32.php")
     Call<orderBean> getOrders32(
             @Part("id") String client,
             @Part("date") String date
     );
 
     @Multipart
-    @POST("bigboss/api/getOrders33.php")
+    @POST("southman/api/getOrders33.php")
     Call<orderBean> getOrders33(
             @Part("id") String client,
             @Part("date") String date
     );
 
     @Multipart
-    @POST("bigboss/api/getOrders2.php")
+    @POST("southman/api/getOrders2.php")
     Call<orderBean> getOrders2(
             @Part("id") String client,
             @Part("date") String date
     );
 
     @Multipart
-    @POST("bigboss/api/getOrders22.php")
+    @POST("southman/api/getOrders22.php")
     Call<orderBean> getOrders22(
             @Part("id") String client,
             @Part("date") String date
     );
 
     @Multipart
-    @POST("bigboss/api/getOrders23.php")
+    @POST("southman/api/getOrders23.php")
     Call<orderBean> getOrders23(
             @Part("id") String client,
             @Part("date") String date
     );
 
     @Multipart
-    @POST("bigboss/api/getCurrent.php")
+    @POST("southman/api/getCurrent.php")
     Call<currentBean> getCurrent(
             @Part("client") String client
     );
 
     @Multipart
-    @POST("bigboss/api/completeTrans.php")
+    @POST("southman/api/completeTrans.php")
     Call<currentBean> completeTrans(
             @Part("client") String client
     );
 
     @Multipart
-    @POST("bigboss/api/cancelOrder.php")
+    @POST("southman/api/cancelOrder.php")
     Call<currentBean> cancelOrder(
             @Part("id") String user
     );
 
     @Multipart
-    @POST("bigboss/api/getTrans.php")
+    @POST("southman/api/getTrans.php")
     Call<transBean> getTrans(
             @Part("client") String client,
             @Part("date") String date
     );
 
-    @GET("bigboss/api/getClients.php")
+    @GET("southman/api/getClients.php")
     Call<clientsBean> getClients();
 
     @Multipart
-    @POST("bigboss/api/completeOrder.php")
+    @POST("southman/api/completeOrder.php")
     Call<orderBean> completeOrder(
             @Part("id") String client
     );

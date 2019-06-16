@@ -52,7 +52,9 @@ public class Datum {
     @SerializedName("generate")
     @Expose
     private String generate;
-
+    @SerializedName("take")
+    @Expose
+    private String take;
 
     public String getId() {
         return id;
@@ -180,5 +182,13 @@ public class Datum {
 
     public void setGenerate(String generate) {
         this.generate = generate;
+    }
+
+    public String getTake() {
+        return take;
+    }
+
+    public void setTake(String take) {
+        this.take = take;
     }
 }

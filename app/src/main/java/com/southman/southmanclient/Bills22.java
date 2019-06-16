@@ -252,6 +252,17 @@ public class Bills22 extends Fragment {
 
             holder.cancel.setVisibility(View.GONE);
 
+
+            if (item.getTake().equals("yes"))
+            {
+                holder.take.setVisibility(View.VISIBLE);
+            }
+            else
+            {
+                holder.take.setVisibility(View.GONE);
+            }
+
+
             holder.client.setText(item.getClient());
 
             switch (item.getText()) {
@@ -382,7 +393,7 @@ public class Bills22 extends Fragment {
         {
             TextView order, customer, cash, scratch, total, collect , client;
             Button verify, cancel;
-            ImageView bill;
+            ImageView bill , take;
 
             ViewHolder(@NonNull View itemView) {
                 super(itemView);
@@ -395,6 +406,7 @@ public class Bills22 extends Fragment {
                 verify = itemView.findViewById(R.id.verify);
                 cancel = itemView.findViewById(R.id.cancel);
                 bill = itemView.findViewById(R.id.bill);
+                take = itemView.findViewById(R.id.take);
                 client = itemView.findViewById(R.id.client);
             }
         }

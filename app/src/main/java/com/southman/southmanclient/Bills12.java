@@ -385,6 +385,15 @@ public class Bills12 extends Fragment {
 
             loader.displayImage(item.getBill(), holder.bill, options);
 
+            if (item.getTake().equals("yes"))
+            {
+                holder.take.setVisibility(View.VISIBLE);
+            }
+            else
+            {
+                holder.take.setVisibility(View.GONE);
+            }
+
             holder.bill.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -704,7 +713,7 @@ public class Bills12 extends Fragment {
         class ViewHolder extends RecyclerView.ViewHolder {
             TextView order, customer, cash, scratch, total, collect, generate;
             Button verify, cancel;
-            ImageView bill;
+            ImageView bill , take;
 
             ViewHolder(@NonNull View itemView) {
                 super(itemView);
@@ -717,6 +726,7 @@ public class Bills12 extends Fragment {
                 verify = itemView.findViewById(R.id.verify);
                 cancel = itemView.findViewById(R.id.cancel);
                 bill = itemView.findViewById(R.id.bill);
+                take = itemView.findViewById(R.id.take);
                 generate = itemView.findViewById(R.id.generate);
 
             }
