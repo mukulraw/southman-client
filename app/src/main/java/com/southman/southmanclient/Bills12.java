@@ -282,7 +282,7 @@ public class Bills12 extends Fragment {
 
             } else {
 
-                holder.generate.setText("Customer is asking for final bill");
+                holder.generate.setText(item.getUser() + " is asking for final bill");
 
             }
 
