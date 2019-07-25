@@ -173,7 +173,6 @@ public class MainActivity extends AppCompatActivity {
 
         String[] titles = {
                 "Voucher Store",
-                "Bills",
                 "Redeem Store"
         };
 
@@ -194,10 +193,6 @@ public class MainActivity extends AppCompatActivity {
 
                 return new Bills();
             }
-            else if (i == 1)
-            {
-                return new Orders();
-            }
             else
             {
                 return new Bills12();
@@ -206,7 +201,7 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         public int getCount() {
-            return 3;
+            return 2;
         }
     }
 

@@ -63,7 +63,7 @@ public class MainActivity2 extends AppCompatActivity {
 
         cname.setText(lname);
 
-        adapter = new PagerAdapter(getSupportFragmentManager(), 4);
+        adapter = new PagerAdapter(getSupportFragmentManager(), 2);
         pager.setAdapter(adapter);
         tabLayout.setViewPager(pager);
 
@@ -153,7 +153,6 @@ public class MainActivity2 extends AppCompatActivity {
 
         String[] titles = {
                 "Voucher Store",
-                "Bills",
                 "Redeem Store"
         };
 
@@ -173,9 +172,6 @@ public class MainActivity2 extends AppCompatActivity {
             if (i == 0) {
 
                 return new Bills2();
-            }else if (i == 1)
-            {
-                return new Orders2();
             }
             else
             {
@@ -185,7 +181,7 @@ public class MainActivity2 extends AppCompatActivity {
 
         @Override
         public int getCount() {
-            return 3;
+            return 2;
         }
     }
 

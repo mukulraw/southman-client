@@ -21,8 +21,9 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.southman.southmanclient.orderPOJO.Datum;
 import com.southman.southmanclient.orderPOJO.orderBean;
+import com.southman.southmanclient.voucherPOJO.Datum;
+import com.southman.southmanclient.voucherPOJO.voucherBean;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -115,11 +116,11 @@ public class Bills2 extends Fragment {
                         AllApiIneterface cr = retrofit.create(AllApiIneterface.class);
 
 
-                        Call<orderBean> call = cr.getOrders3(SharePreferenceUtils.getInstance().getString("id") , strDate);
+                        Call<voucherBean> call = cr.getOrders31(SharePreferenceUtils.getInstance().getString("id") , strDate);
 
-                        call.enqueue(new Callback<orderBean>() {
+                        call.enqueue(new Callback<voucherBean>() {
                             @Override
-                            public void onResponse(Call<orderBean> call, Response<orderBean> response) {
+                            public void onResponse(Call<voucherBean> call, Response<voucherBean> response) {
 
                                 if (response.body().getStatus().equals("1"))
                                 {
@@ -138,7 +139,7 @@ public class Bills2 extends Fragment {
                             }
 
                             @Override
-                            public void onFailure(Call<orderBean> call, Throwable t) {
+                            public void onFailure(Call<voucherBean> call, Throwable t) {
                                 progress.setVisibility(View.GONE);
                             }
                         });
@@ -183,11 +184,11 @@ public class Bills2 extends Fragment {
         AllApiIneterface cr = retrofit.create(AllApiIneterface.class);
 
 
-        Call<orderBean> call = cr.getOrders3(SharePreferenceUtils.getInstance().getString("id") , formattedDate);
+        Call<voucherBean> call = cr.getOrders31(SharePreferenceUtils.getInstance().getString("id") , formattedDate);
 
-        call.enqueue(new Callback<orderBean>() {
+        call.enqueue(new Callback<voucherBean>() {
             @Override
-            public void onResponse(Call<orderBean> call, Response<orderBean> response) {
+            public void onResponse(Call<voucherBean> call, Response<voucherBean> response) {
 
                 if (response.body().getStatus().equals("1"))
                 {
@@ -205,7 +206,7 @@ public class Bills2 extends Fragment {
             }
 
             @Override
-            public void onFailure(Call<orderBean> call, Throwable t) {
+            public void onFailure(Call<voucherBean> call, Throwable t) {
                 progress.setVisibility(View.GONE);
             }
         });
@@ -234,7 +235,7 @@ public class Bills2 extends Fragment {
         @Override
         public ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
             LayoutInflater inflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            View view = inflater.inflate(R.layout.order_list_model , viewGroup , false);
+            View view = inflater.inflate(R.layout.order_list_model1 , viewGroup , false);
             return new ViewHolder(view);
         }
 
@@ -243,65 +244,15 @@ public class Bills2 extends Fragment {
 
             final Datum item = list.get(i);
 
-            holder.code.setText("Item - " + item.getCode());
             holder.date.setText(item.getCreated());
 
-            holder.user.setText(item.getUser());
+            holder.user.setText(item.getUser() + " purchased Scratch Card worth Rs. " + item.getAmount() + " for " + item.getClient());
 
-            switch (item.getText()) {
-                case "perks":
-                    holder.type.setText("VOUCHER STORE - " + item.getId());
+                    holder.type.setText("VOUCHER STORE");
                     holder.type.setTextColor(Color.parseColor("#009688"));
-                    holder.price.setText("Benefits - " + item.getPrice() + " credits");
 
-                    try {
 
-                        float pr = Float.parseFloat(item.getPrice());
-                        float pa = Float.parseFloat(item.getCashValue());
 
-                        holder.paid.setText("Pending benefits - " + String.valueOf(pr - pa) + " credits");
-
-                    }catch (Exception e)
-                    {
-                        e.printStackTrace();
-                    }
-
-                    holder.paid.setVisibility(View.VISIBLE);
-                    holder.price.setVisibility(View.VISIBLE);
-
-                    break;
-                case "cash":
-                    holder.type.setText("REDEEM STORE - " + item.getId());
-                    holder.type.setTextColor(Color.parseColor("#689F38"));
-                    holder.price.setText("Price - " + item.getPrice() + " Rs.");
-
-                    try {
-
-                        float pr1 = Float.parseFloat(item.getPrice());
-                        float pa1 = Float.parseFloat(item.getCashValue());
-
-                        holder.paid.setText("Collect from customer - " + String.valueOf(pr1 - pa1) + " Rs.");
-
-                    }catch (Exception e)
-                    {
-                        e.printStackTrace();
-                    }
-
-                    holder.paid.setVisibility(View.VISIBLE);
-                    holder.price.setVisibility(View.VISIBLE);
-
-                    break;
-                case "scratch":
-                    holder.type.setText("SCRATCH CARD - " + item.getId());
-                    holder.type.setTextColor(Color.parseColor("#F9A825"));
-                    holder.paid.setVisibility(View.GONE);
-                    //holder.price.setVisibility(View.GONE);
-
-                    holder.price.setText("Discount - " + item.getCashValue() + " Rs.");
-                    break;
-            }
-
-            holder.complete.setText(item.getStatus());
 
         }
 
@@ -312,18 +263,13 @@ public class Bills2 extends Fragment {
 
         class ViewHolder extends RecyclerView.ViewHolder
         {
-            TextView code, date, type , user , price , paid;
-            Button complete;
+            TextView date, type , user;
 
             ViewHolder(@NonNull View itemView) {
                 super(itemView);
-                code = itemView.findViewById(R.id.code);
                 date = itemView.findViewById(R.id.date);
                 type = itemView.findViewById(R.id.type);
                 user = itemView.findViewById(R.id.user);
-                price = itemView.findViewById(R.id.price);
-                paid = itemView.findViewById(R.id.paid);
-                complete = itemView.findViewById(R.id.complete);
 
             }
         }

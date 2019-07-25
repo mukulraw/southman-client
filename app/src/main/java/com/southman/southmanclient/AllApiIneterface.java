@@ -6,6 +6,7 @@ import com.southman.southmanclient.currentPOJO.currentBean;
 import com.southman.southmanclient.loginPOJO.loginBean;
 import com.southman.southmanclient.orderPOJO.orderBean;
 import com.southman.southmanclient.transPOJO.transBean;
+import com.southman.southmanclient.voucherPOJO.voucherBean;
 
 import retrofit2.Call;
 import retrofit2.http.GET;
@@ -66,6 +67,13 @@ public interface AllApiIneterface {
     );
 
     @Multipart
+    @POST("southman/api/getOrders1.php")
+    Call<voucherBean> getOrders1(
+            @Part("id") String client,
+            @Part("date") String date
+    );
+
+    @Multipart
     @POST("southman/api/getOrders12.php")
     Call<orderBean> getOrders12(
             @Part("id") String client,
@@ -82,6 +90,13 @@ public interface AllApiIneterface {
     @Multipart
     @POST("southman/api/getOrders3.php")
     Call<orderBean> getOrders3(
+            @Part("id") String client,
+            @Part("date") String date
+    );
+
+    @Multipart
+    @POST("southman/api/getOrders31.php")
+    Call<voucherBean> getOrders31(
             @Part("id") String client,
             @Part("date") String date
     );
