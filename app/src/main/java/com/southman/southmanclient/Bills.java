@@ -2,6 +2,7 @@ package com.southman.southmanclient;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -22,7 +23,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.southman.southmanclient.orderPOJO.orderBean;
-import com.southman.southmanclient.voucherPOJO.Datum;
+import com.southman.southmanclient.vHistoryPOJO.Datum;
+import com.southman.southmanclient.vHistoryPOJO.vHistoryBean;
 import com.southman.southmanclient.voucherPOJO.voucherBean;
 
 import java.text.SimpleDateFormat;
@@ -120,11 +122,11 @@ public class Bills extends Fragment {
                         AllApiIneterface cr = retrofit.create(AllApiIneterface.class);
 
 
-                        Call<voucherBean> call = cr.getOrders1(SharePreferenceUtils.getInstance().getString("id"), strDate);
+                        Call<vHistoryBean> call = cr.getOrders1(SharePreferenceUtils.getInstance().getString("id"), dd);
 
-                        call.enqueue(new Callback<voucherBean>() {
+                        call.enqueue(new Callback<vHistoryBean>() {
                             @Override
-                            public void onResponse(Call<voucherBean> call, Response<voucherBean> response) {
+                            public void onResponse(Call<vHistoryBean> call, Response<vHistoryBean> response) {
 
                                 if (response.body().getStatus().equals("1")) {
                                     adapter.setData(response.body().getData());
@@ -140,7 +142,7 @@ public class Bills extends Fragment {
                             }
 
                             @Override
-                            public void onFailure(Call<voucherBean> call, Throwable t) {
+                            public void onFailure(Call<vHistoryBean> call, Throwable t) {
                                 progress.setVisibility(View.GONE);
                             }
                         });
@@ -153,14 +155,6 @@ public class Bills extends Fragment {
             }
         });
 
-
-        return view;
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-
         Date c = Calendar.getInstance().getTime();
         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
         String formattedDate = df.format(c);
@@ -170,6 +164,15 @@ public class Bills extends Fragment {
         date.setText("Date - " + formattedDate + " (click to change)");
 
         dd = formattedDate;
+
+        return view;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+
 
         progress.setVisibility(View.VISIBLE);
 
@@ -184,11 +187,11 @@ public class Bills extends Fragment {
         AllApiIneterface cr = retrofit.create(AllApiIneterface.class);
 
 
-        Call<voucherBean> call = cr.getOrders1(SharePreferenceUtils.getInstance().getString("id"), formattedDate);
+        Call<vHistoryBean> call = cr.getOrders1(SharePreferenceUtils.getInstance().getString("id"), dd);
 
-        call.enqueue(new Callback<voucherBean>() {
+        call.enqueue(new Callback<vHistoryBean>() {
             @Override
-            public void onResponse(Call<voucherBean> call, Response<voucherBean> response) {
+            public void onResponse(Call<vHistoryBean> call, Response<vHistoryBean> response) {
 
                 if (response.body().getStatus().equals("1")) {
                     adapter.setData(response.body().getData());
@@ -204,7 +207,7 @@ public class Bills extends Fragment {
             }
 
             @Override
-            public void onFailure(Call<voucherBean> call, Throwable t) {
+            public void onFailure(Call<vHistoryBean> call, Throwable t) {
                 progress.setVisibility(View.GONE);
             }
         });
@@ -239,12 +242,30 @@ public class Bills extends Fragment {
 
             final Datum item = list.get(i);
 
-            holder.date.setText(item.getCreated());
+            holder.status.setText(item.getCreated());
 
-            holder.user.setText(item.getUser() + " purchased Scratch Card worth Rs. " + item.getAmount());
 
-            holder.type.setText("VOUCHER STORE");
+            holder.type.setText(item.getTxn());
+            holder.code.setText(item.getClient() + " paid \u20B9 " + item.getAmount());
             holder.type.setTextColor(Color.parseColor("#009688"));
+
+            holder.date.setVisibility(View.GONE);
+            //holder.price.setVisibility(View.VISIBLE);
+
+
+
+            holder.paid.setText("completed");
+
+            holder.itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+
+                    Intent intent = new Intent(context , StatusActivity.class);
+                    intent.putExtra("id" , item.getId());
+                    context.startActivity(intent);
+
+                }
+            });
 
 
 
@@ -256,13 +277,24 @@ public class Bills extends Fragment {
         }
 
         class ViewHolder extends RecyclerView.ViewHolder {
-            TextView date, type , user;
+            final TextView code;
+            final TextView date;
+            final TextView type;
+            final TextView status;
+            final TextView price;
+            final TextView paid;
 
             ViewHolder(@NonNull View itemView) {
                 super(itemView);
+
+                code = itemView.findViewById(R.id.code);
                 date = itemView.findViewById(R.id.date);
                 type = itemView.findViewById(R.id.type);
-                user = itemView.findViewById(R.id.user);
+                status = itemView.findViewById(R.id.status);
+                price = itemView.findViewById(R.id.price);
+                paid = itemView.findViewById(R.id.paid);
+
+
             }
         }
     }

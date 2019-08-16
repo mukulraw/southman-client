@@ -20,12 +20,13 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:padding="10dp"
+                android:drawablePadding="10dp"
                 android:text="VOUCHER STORE"
+                android:drawableStart="@drawable/ic_google_pay_mark_800_gray"
                 android:id="@+id/type"
                 android:layout_alignParentStart="true"
                 android:textColor="@android:color/holo_blue_dark"
-                android:gravity="center_vertical"
+                android:gravity="center"
                 />
 
             <TextView
@@ -33,7 +34,8 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
                 android:layout_centerVertical="true"
-                android:id="@+id/date"
+                android:id="@+id/status"
+                android:textSize="12sp"
                 android:paddingEnd="10dp"
                 />
 
@@ -42,14 +44,59 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:textSize="18sp"
+            android:text="CODE01"
+            android:id="@+id/code"
+            android:gravity="center_vertical"
+            android:textColor="#000000"
+            android:paddingEnd="5dp"
+            android:paddingStart="5dp"
+            />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:id="@+id/layout"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:id="@+id/price"
+                android:visibility="gone"
+                android:gravity="center_vertical"
+                android:padding="10dp"
+                />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="VIEW BENEFITS"
+                android:layout_alignParentEnd="true"
+                android:id="@+id/paid"
+                android:textColor="@color/colorAccent"
+                android:gravity="center_vertical"
+                android:padding="5dp"
+                />
+
+        </RelativeLayout>
+
+
+
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_gravity="end"
+            android:text="VIEW BENEFITS"
+            android:visibility="gone"
+            android:textColor="@color/colorAccent"
             android:paddingStart="10dp"
             android:paddingEnd="10dp"
             android:paddingBottom="5dp"
-            android:id="@+id/user"
+            android:id="@+id/date"
             />
-
-
 
     </LinearLayout>
 

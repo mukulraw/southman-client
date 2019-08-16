@@ -13,7 +13,9 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".Clients"></activity>
+        <activity android:name=".OrderDetails"></activity>
+        <activity android:name=".StatusActivity" />
+        <activity android:name=".Clients" />
         <activity android:name=".TransHistory" />
         <activity android:name=".Current" />
         <activity android:name=".Register" />

@@ -3,9 +3,12 @@ package com.southman.southmanclient;
 import com.southman.southmanclient.billPOJO.billBean;
 import com.southman.southmanclient.clientsPOJO.clientsBean;
 import com.southman.southmanclient.currentPOJO.currentBean;
+import com.southman.southmanclient.gPayPOJO.gPayBean;
 import com.southman.southmanclient.loginPOJO.loginBean;
 import com.southman.southmanclient.orderPOJO.orderBean;
 import com.southman.southmanclient.transPOJO.transBean;
+import com.southman.southmanclient.vHistoryPOJO.vHistoryBean;
+import com.southman.southmanclient.voucherHistoryPOJO.voucherHistoryBean;
 import com.southman.southmanclient.voucherPOJO.voucherBean;
 
 import retrofit2.Call;
@@ -68,7 +71,7 @@ public interface AllApiIneterface {
 
     @Multipart
     @POST("southman/api/getOrders1.php")
-    Call<voucherBean> getOrders1(
+    Call<vHistoryBean> getOrders1(
             @Part("id") String client,
             @Part("date") String date
     );
@@ -168,6 +171,19 @@ public interface AllApiIneterface {
     @POST("southman/api/completeOrder.php")
     Call<orderBean> completeOrder(
             @Part("id") String client
+    );
+
+
+    @Multipart
+    @POST("southman/api/getSingleOrder.php")
+    Call<gPayBean> getSingleOrder(
+            @Part("id") String id
+    );
+
+    @Multipart
+    @POST("southman/api/getOrderHistory.php")
+    Call<voucherHistoryBean> getOrderHistory(
+            @Part("order_id") String order_id
     );
 
 }
