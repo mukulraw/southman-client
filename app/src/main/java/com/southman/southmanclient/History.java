@@ -113,7 +113,7 @@ public class History extends AppCompatActivity {
         @Override
         public Fragment getItem(int i) {
             if (i == 0) {
-                return new voucer();
+                return new Bills();
             } else {
                 return new scratch();
             }
