@@ -1,9 +1,9 @@
-package com.southman.southmanclient.vHistoryPOJO;
+package com.southman.southmanclient.onlinePayPOJO;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class Datum {
+public class Data {
     @SerializedName("id")
     @Expose
     private String id;
@@ -13,22 +13,24 @@ public class Datum {
     @SerializedName("amount")
     @Expose
     private String amount;
-    @SerializedName("client")
+    @SerializedName("cash")
     @Expose
-    private String client;
-    @SerializedName("created")
+    private String cash;
+    @SerializedName("scratch")
     @Expose
-    private String created;
+    private String scratch;
     @SerializedName("mode")
     @Expose
     private String mode;
     @SerializedName("status")
     @Expose
     private String status;
-    @SerializedName("pid")
+    @SerializedName("client")
     @Expose
-    private String pid;
-
+    private String client;
+    @SerializedName("created")
+    @Expose
+    private String created;
 
     public String getId() {
         return id;
@@ -54,6 +56,38 @@ public class Datum {
         this.amount = amount;
     }
 
+    public String getCash() {
+        return cash;
+    }
+
+    public void setCash(String cash) {
+        this.cash = cash;
+    }
+
+    public String getScratch() {
+        return scratch;
+    }
+
+    public void setScratch(String scratch) {
+        this.scratch = scratch;
+    }
+
+    public String getMode() {
+        return mode;
+    }
+
+    public void setMode(String mode) {
+        this.mode = mode;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
     public String getClient() {
         return client;
     }
@@ -68,29 +102,5 @@ public class Datum {
 
     public void setCreated(String created) {
         this.created = created;
-    }
-
-    public String getStatus() {
-        return status;
-    }
-
-    public String getMode() {
-        return mode;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
-    }
-
-    public void setMode(String mode) {
-        this.mode = mode;
-    }
-
-    public String getPid() {
-        return pid;
-    }
-
-    public void setPid(String pid) {
-        this.pid = pid;
     }
 }

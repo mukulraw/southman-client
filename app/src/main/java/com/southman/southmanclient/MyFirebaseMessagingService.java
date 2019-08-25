@@ -1,5 +1,6 @@
 package com.southman.southmanclient;
 
+import android.app.ActivityManager;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -10,6 +11,7 @@ import android.os.Build;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.LocalBroadcastManager;
+import android.text.Html;
 import android.util.Log;
 
 import com.google.firebase.messaging.FirebaseMessagingService;
@@ -17,6 +19,8 @@ import com.google.firebase.messaging.RemoteMessage;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.util.List;
 
 public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
@@ -70,12 +74,29 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
         int importance = NotificationManager.IMPORTANCE_HIGH;
 
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(Bean.getContext(), idChannel);
-        builder.setContentTitle(Bean.getContext().getString(R.string.app_name))
-                .setSmallIcon(R.drawable.ddddd)
-                .setContentIntent(pendingIntent)
-                .setAutoCancel(true)
-                .setContentText(message);
+        NotificationCompat.Builder builder;
+
+        if (isAppRunning(this))
+        {
+            builder = new NotificationCompat.Builder(Bean.getContext(), idChannel);
+            builder.setContentTitle(Bean.getContext().getString(R.string.app_name))
+                    .setSmallIcon(R.drawable.ddddd)
+                    .setAutoCancel(true)
+                    .setStyle(new NotificationCompat.BigTextStyle()
+                            .bigText(Html.fromHtml(message)))
+                    .setContentText(Html.fromHtml(message));
+        }
+        else
+        {
+            builder = new NotificationCompat.Builder(Bean.getContext(), idChannel);
+            builder.setContentTitle(Bean.getContext().getString(R.string.app_name))
+                    .setSmallIcon(R.drawable.ddddd)
+                    .setContentIntent(pendingIntent)
+                    .setStyle(new NotificationCompat.BigTextStyle()
+                            .bigText(Html.fromHtml(message)))
+                    .setAutoCancel(true)
+                    .setContentText(Html.fromHtml(message));
+        }
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             mChannel = new NotificationChannel(idChannel, Bean.getContext().getString(R.string.app_name), importance);
@@ -100,6 +121,22 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         }
 
 
+    }
+
+
+    public static boolean isAppRunning(Context context) {
+        ActivityManager activityManager = (ActivityManager) context
+                .getSystemService(Context.ACTIVITY_SERVICE);
+        List<ActivityManager.RunningAppProcessInfo> appProcesses = activityManager
+                .getRunningAppProcesses();
+        for (ActivityManager.RunningAppProcessInfo appProcess : appProcesses) {
+            if (appProcess.processName.equals(context.getPackageName())) {
+                if (appProcess.importance != ActivityManager.RunningAppProcessInfo.IMPORTANCE_PERCEPTIBLE) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
 }

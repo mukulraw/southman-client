@@ -5,6 +5,7 @@ import com.southman.southmanclient.clientsPOJO.clientsBean;
 import com.southman.southmanclient.currentPOJO.currentBean;
 import com.southman.southmanclient.gPayPOJO.gPayBean;
 import com.southman.southmanclient.loginPOJO.loginBean;
+import com.southman.southmanclient.onlinePayPOJO.onlinePayBean;
 import com.southman.southmanclient.orderPOJO.orderBean;
 import com.southman.southmanclient.transPOJO.transBean;
 import com.southman.southmanclient.vHistoryPOJO.vHistoryBean;
@@ -78,7 +79,7 @@ public interface AllApiIneterface {
 
     @Multipart
     @POST("southman/api/getOrders12.php")
-    Call<orderBean> getOrders12(
+    Call<vHistoryBean> getOrders12(
             @Part("id") String client,
             @Part("date") String date
     );
@@ -88,6 +89,12 @@ public interface AllApiIneterface {
     Call<orderBean> getOrders13(
             @Part("id") String client,
             @Part("date") String date
+    );
+
+    @Multipart
+    @POST("southman/api/getSingleOrder2.php")
+    Call<onlinePayBean> getSingleOrder2(
+            @Part("id") String id
     );
 
     @Multipart
