@@ -136,7 +136,7 @@ public class Bills12 extends Fragment {
                         AllApiIneterface cr = retrofit.create(AllApiIneterface.class);
 
 
-                        Call<vHistoryBean> call = cr.getOrders12(SharePreferenceUtils.getInstance().getString("id"), strDate);
+                        Call<vHistoryBean> call = cr.getOrders12(SharePreferenceUtils.getInstance().getString("id"), dd);
 
                         call.enqueue(new Callback<vHistoryBean>() {
                             @Override
@@ -169,6 +169,15 @@ public class Bills12 extends Fragment {
             }
         });
 
+        Date c = Calendar.getInstance().getTime();
+        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+        String formattedDate = df.format(c);
+
+        Log.d("dddd", formattedDate);
+
+        date.setText("Date - " + formattedDate + " (click to change)");
+
+        dd = formattedDate;
 
         singleReceiver = new BroadcastReceiver() {
             @Override
@@ -194,15 +203,7 @@ public class Bills12 extends Fragment {
     public void onResume() {
         super.onResume();
 
-        Date c = Calendar.getInstance().getTime();
-        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
-        String formattedDate = df.format(c);
 
-        Log.d("dddd", formattedDate);
-
-        date.setText("Date - " + formattedDate + " (click to change)");
-
-        dd = formattedDate;
 
         progress.setVisibility(View.VISIBLE);
 
@@ -217,7 +218,7 @@ public class Bills12 extends Fragment {
         AllApiIneterface cr = retrofit.create(AllApiIneterface.class);
 
 
-        Call<vHistoryBean> call = cr.getOrders12(SharePreferenceUtils.getInstance().getString("id"), formattedDate);
+        Call<vHistoryBean> call = cr.getOrders12(SharePreferenceUtils.getInstance().getString("id"), dd);
 
         call.enqueue(new Callback<vHistoryBean>() {
             @Override
@@ -276,8 +277,18 @@ public class Bills12 extends Fragment {
             holder.status.setText(item.getCreated());
 
 
+
             holder.type.setText(item.getTxn());
-            holder.code.setText("Paid \u20B9 " + item.getAmount() + " to " + item.getClient());
+
+            if (item.getMode().equals("GPAY"))
+            {
+                holder.code.setText("Paid \u20B9 " + item.getAmount() + " to " + item.getClient());
+            }
+            else
+            {
+                holder.code.setText(item.getClient() + " has requested to pay \u20B9 " + item.getAmount());
+            }
+
             holder.type.setTextColor(Color.parseColor("#009688"));
 
             holder.date.setVisibility(View.GONE);
@@ -299,9 +310,40 @@ public class Bills12 extends Fragment {
                 @Override
                 public void onClick(View view) {
 
-                    Intent intent = new Intent(context , StatusActivity5.class);
-                    intent.putExtra("id" , item.getId());
-                    context.startActivity(intent);
+                    if (item.getMode().equals("GPAY"))
+                    {
+                        Intent intent = new Intent(context , StatusActivity5.class);
+                        intent.putExtra("id" , item.getId());
+                        context.startActivity(intent);
+                    }
+                    else
+                    {
+
+                        if (item.getStatus().equals("pending"))
+                        {
+
+                            Intent intent = new Intent(context , CollectCash.class);
+                            intent.putExtra("id" , item.getId());
+                            intent.putExtra("cash" , item.getCash());
+                            intent.putExtra("scratch" , item.getScratch());
+                            intent.putExtra("pid" , item.getPid());
+                            intent.putExtra("amount" , item.getAmount());
+                            intent.putExtra("tid" , item.getTxn());
+                            intent.putExtra("date" , item.getCreated());
+                            intent.putExtra("user_id" , item.getUser_id());
+                            context.startActivity(intent);
+
+                        }
+                        else
+                        {
+                            Intent intent = new Intent(context , StatusActivity5.class);
+                            intent.putExtra("id" , item.getId());
+                            context.startActivity(intent);
+                        }
+
+                    }
+
+
 
                 }
             });

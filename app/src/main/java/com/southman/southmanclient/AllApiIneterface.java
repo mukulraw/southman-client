@@ -105,6 +105,14 @@ public interface AllApiIneterface {
     );
 
     @Multipart
+    @POST("southman/api/onlinePay.php")
+    Call<onlinePayBean> onlinePay(
+            @Part("id") String id,
+            @Part("pid") String pid,
+            @Part("user_id") String user_id
+    );
+
+    @Multipart
     @POST("southman/api/getOrders31.php")
     Call<voucherBean> getOrders31(
             @Part("id") String client,

@@ -28,7 +28,15 @@ public class Datum {
     @SerializedName("pid")
     @Expose
     private String pid;
-
+    @SerializedName("cash")
+    @Expose
+    private String cash;
+    @SerializedName("scratch")
+    @Expose
+    private String scratch;
+    @SerializedName("user_id")
+    @Expose
+    private String user_id;
 
     public String getId() {
         return id;
@@ -92,5 +100,29 @@ public class Datum {
 
     public void setPid(String pid) {
         this.pid = pid;
+    }
+
+    public String getCash() {
+        return cash;
+    }
+
+    public String getScratch() {
+        return scratch;
+    }
+
+    public void setCash(String cash) {
+        this.cash = cash;
+    }
+
+    public void setScratch(String scratch) {
+        this.scratch = scratch;
+    }
+
+    public String getUser_id() {
+        return user_id;
+    }
+
+    public void setUser_id(String user_id) {
+        this.user_id = user_id;
     }
 }

@@ -161,10 +161,27 @@ public class StatusActivity5 extends AppCompatActivity {
                 amount.setText(Html.fromHtml("\u20B9 " + String.valueOf(nb) + " <strike>\u20B9 " + item.getAmount() + "</strike>"));
 
 
-                status.setText("Payment Successful");
-                order.setVisibility(View.VISIBLE);
-                //tag.setVisibility(View.VISIBLE);
-                amount.setCompoundDrawablesWithIntrinsicBounds(null, getResources().getDrawable(R.drawable.ic_checked), null, null);
+                if (item.getStatus().equals("completed"))
+                {
+                    status.setText("Payment Successful");
+                    order.setVisibility(View.VISIBLE);
+                    //tag.setVisibility(View.VISIBLE);
+                    amount.setCompoundDrawablesWithIntrinsicBounds(null , getResources().getDrawable(R.drawable.ic_checked) , null , null);
+                }
+                else if (item.getStatus().equals("rejected"))
+                {
+                    status.setText("Order Rejected");
+                    order.setVisibility(View.GONE);
+                    tag.setVisibility(View.GONE);
+                    amount.setCompoundDrawablesWithIntrinsicBounds(null , getResources().getDrawable(R.drawable.ic_cancel) , null , null);
+                }
+                else
+                {
+                    status.setText("Order is Pending");
+                    order.setVisibility(View.GONE);
+                    tag.setVisibility(View.GONE);
+                    amount.setCompoundDrawablesWithIntrinsicBounds(null , null , null , null);
+                }
 
 
                 client_name.setText(response.body().getData().getClient());
