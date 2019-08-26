@@ -167,9 +167,9 @@ public interface AllApiIneterface {
     );
 
     @Multipart
-    @POST("southman/api/cancelOrder.php")
-    Call<currentBean> cancelOrder(
-            @Part("id") String user
+    @POST("southman/api/rejectOrder.php")
+    Call<onlinePayBean> cancelOrder(
+            @Part("id") String id
     );
 
     @Multipart

@@ -14,6 +14,7 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.southman.southmanclient.onlinePayPOJO.onlinePayBean;
 
@@ -162,6 +163,81 @@ public class CollectCash extends AppCompatActivity {
 
                     }
                 });
+
+            }
+        });
+
+        reject.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+
+                final Dialog dialog = new Dialog(CollectCash.this);
+                dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                dialog.setCancelable(false);
+                dialog.setContentView(R.layout.delete_dialog);
+                dialog.show();
+
+
+                Button ok = dialog.findViewById(R.id.button2);
+                Button cancel = dialog.findViewById(R.id.button4);
+
+
+                cancel.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+
+                        dialog.dismiss();
+
+                    }
+                });
+
+                ok.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+
+                        progress.setVisibility(View.VISIBLE);
+
+                        Bean b = (Bean) getApplicationContext();
+
+
+                        Retrofit retrofit = new Retrofit.Builder()
+                                .baseUrl(b.baseurl)
+                                .addConverterFactory(ScalarsConverterFactory.create())
+                                .addConverterFactory(GsonConverterFactory.create())
+                                .build();
+
+                        AllApiIneterface cr = retrofit.create(AllApiIneterface.class);
+
+
+                        Call<onlinePayBean> call = cr.cancelOrder(oid);
+
+                        call.enqueue(new Callback<onlinePayBean>() {
+                            @Override
+                            public void onResponse(Call<onlinePayBean> call, Response<onlinePayBean> response) {
+
+                                Toast.makeText(CollectCash.this, response.body().getMessage(), Toast.LENGTH_SHORT).show();
+
+                                dialog.dismiss();
+
+                                progress.setVisibility(View.GONE);
+
+                                finish();
+
+
+                            }
+
+                            @Override
+                            public void onFailure(Call<onlinePayBean> call, Throwable t) {
+                                progress.setVisibility(View.GONE);
+                            }
+                        });
+
+                    }
+                });
+
+
+
 
             }
         });
