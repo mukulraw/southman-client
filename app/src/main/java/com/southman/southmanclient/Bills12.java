@@ -282,11 +282,19 @@ public class Bills12 extends Fragment {
 
             if (item.getMode().equals("GPAY"))
             {
-                holder.code.setText("Paid \u20B9 " + item.getAmount() + " to " + item.getClient());
+                holder.code.setText(item.getClient() + " paid \u20B9 " + item.getAmount());
             }
             else
             {
-                holder.code.setText(item.getClient() + " has requested to pay \u20B9 " + item.getAmount());
+                if (item.getStatus().equals("pending"))
+                {
+                    holder.code.setText(item.getClient() + " has requested to pay \u20B9 " + item.getAmount());
+                }
+                else
+                {
+                    holder.code.setText(item.getClient() + " paid \u20B9 " + item.getAmount());
+                }
+
             }
 
             holder.type.setTextColor(Color.parseColor("#009688"));

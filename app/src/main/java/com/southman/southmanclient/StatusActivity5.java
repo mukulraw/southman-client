@@ -204,7 +204,7 @@ public class StatusActivity5 extends AppCompatActivity {
                 cashdiscount.setText("Cash Discount - \u20B9 " + item.getCash());
                 scratchcard.setText("Scratch Discount - \u20B9 " + item.getScratch());
                 bill.setText("Total Bill - \u20B9 " + item.getAmount());
-                balance.setText("Balance Pay - \u20B9 " + String.valueOf(nb));
+                balance.setText("Balance Collect - \u20B9 " + String.valueOf(nb));
 
 
                 oid = response.body().getData().getId();

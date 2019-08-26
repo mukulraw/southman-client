@@ -1,12 +1,16 @@
 package com.southman.southmanclient;
 
 import android.app.Dialog;
+import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
@@ -25,8 +29,9 @@ import android.widget.TextView;
 import com.jsibbold.zoomage.ZoomageView;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
-import com.southman.southmanclient.orderPOJO.Datum;
 import com.southman.southmanclient.orderPOJO.orderBean;
+import com.southman.southmanclient.vHistoryPOJO.Datum;
+import com.southman.southmanclient.vHistoryPOJO.vHistoryBean;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -46,24 +51,27 @@ public class Bills22 extends Fragment {
     RecyclerView grid;
     GridLayoutManager manager;
     ProgressBar progress;
-    List<Datum> list;
+    List<com.southman.southmanclient.vHistoryPOJO.Datum> list;
     BillAdapter adapter;
     TextView date;
     LinearLayout linear;
 
+    String dd;
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.bill_layout , container , false);
+        View view = inflater.inflate(R.layout.bill_layout, container, false);
 
         list = new ArrayList<>();
-        date = view.findViewById(R.id.date);
+
         linear = view.findViewById(R.id.linear);
+        date = view.findViewById(R.id.date);
         grid = view.findViewById(R.id.grid);
-        manager = new GridLayoutManager(getContext() , 1);
+        manager = new GridLayoutManager(getContext(), 1);
         progress = view.findViewById(R.id.progress);
 
-        adapter = new BillAdapter(getActivity() , list);
+        adapter = new BillAdapter(getActivity(), list);
 
         grid.setAdapter(adapter);
         grid.setLayoutManager(manager);
@@ -104,7 +112,7 @@ public class Bills22 extends Fragment {
 
                         date.setText("Date - " + strDate + " (click to change)");
 
-
+                        dd = strDate;
 
                         progress.setVisibility(View.VISIBLE);
 
@@ -119,22 +127,19 @@ public class Bills22 extends Fragment {
                         AllApiIneterface cr = retrofit.create(AllApiIneterface.class);
 
 
-                        Call<orderBean> call = cr.getOrders32(SharePreferenceUtils.getInstance().getString("id") , strDate);
+                        Call<vHistoryBean> call = cr.getOrders32(SharePreferenceUtils.getInstance().getString("id"), dd);
 
-                        call.enqueue(new Callback<orderBean>() {
+                        call.enqueue(new Callback<vHistoryBean>() {
                             @Override
-                            public void onResponse(Call<orderBean> call, Response<orderBean> response) {
+                            public void onResponse(Call<vHistoryBean> call, Response<vHistoryBean> response) {
 
-                                if (response.body().getStatus().equals("1"))
-                                {
+                                if (response.body().getStatus().equals("1")) {
                                     adapter.setData(response.body().getData());
                                     linear.setVisibility(View.GONE);
-                                }
-                                else
-                                {
+                                } else {
                                     adapter.setData(response.body().getData());
                                     linear.setVisibility(View.VISIBLE);
-                                 //   Toast.makeText(getContext(), response.body().getMessage(), Toast.LENGTH_SHORT).show();
+                                    //Toast.makeText(getContext(), response.body().getMessage(), Toast.LENGTH_SHORT).show();
                                 }
 
                                 progress.setVisibility(View.GONE);
@@ -142,36 +147,52 @@ public class Bills22 extends Fragment {
                             }
 
                             @Override
-                            public void onFailure(Call<orderBean> call, Throwable t) {
+                            public void onFailure(Call<vHistoryBean> call, Throwable t) {
                                 progress.setVisibility(View.GONE);
                             }
                         });
-
 
 
                     }
                 });
 
 
-
             }
         });
-
-        return view;
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-
 
         Date c = Calendar.getInstance().getTime();
         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
         String formattedDate = df.format(c);
 
-        Log.d("dddd" , formattedDate);
+        Log.d("dddd", formattedDate);
 
         date.setText("Date - " + formattedDate + " (click to change)");
+
+        dd = formattedDate;
+
+        singleReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+
+                if (intent.getAction().equals("count")) {
+                    onResume();
+                }
+
+            }
+        };
+
+        LocalBroadcastManager.getInstance(getContext()).registerReceiver(singleReceiver,
+                new IntentFilter("count"));
+
+        return view;
+    }
+
+    BroadcastReceiver singleReceiver;
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
 
 
         progress.setVisibility(View.VISIBLE);
@@ -187,29 +208,27 @@ public class Bills22 extends Fragment {
         AllApiIneterface cr = retrofit.create(AllApiIneterface.class);
 
 
-        Call<orderBean> call = cr.getOrders32(SharePreferenceUtils.getInstance().getString("id") , formattedDate);
+        Call<vHistoryBean> call = cr.getOrders32(SharePreferenceUtils.getInstance().getString("id"), dd);
 
-        call.enqueue(new Callback<orderBean>() {
+        call.enqueue(new Callback<vHistoryBean>() {
             @Override
-            public void onResponse(Call<orderBean> call, Response<orderBean> response) {
+            public void onResponse(Call<vHistoryBean> call, Response<vHistoryBean> response) {
 
-                if (response.body().getStatus().equals("1"))
-                {
+                if (response.body().getStatus().equals("1")) {
                     adapter.setData(response.body().getData());
                     linear.setVisibility(View.GONE);
-                }
-                else
-                {
+                } else {
                     adapter.setData(response.body().getData());
                     linear.setVisibility(View.VISIBLE);
-                    //   Toast.makeText(getContext(), response.body().getMessage(), Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(getContext(), response.body().getMessage(), Toast.LENGTH_SHORT).show();
                 }
+
                 progress.setVisibility(View.GONE);
 
             }
 
             @Override
-            public void onFailure(Call<orderBean> call, Throwable t) {
+            public void onFailure(Call<vHistoryBean> call, Throwable t) {
                 progress.setVisibility(View.GONE);
             }
         });
@@ -217,19 +236,16 @@ public class Bills22 extends Fragment {
 
     }
 
-    class BillAdapter extends RecyclerView.Adapter<BillAdapter.ViewHolder>
-    {
+    class BillAdapter extends RecyclerView.Adapter<BillAdapter.ViewHolder> {
         Context context;
-        List<Datum> list = new ArrayList<>();
+        List<com.southman.southmanclient.vHistoryPOJO.Datum> list = new ArrayList<>();
 
-        public BillAdapter(Context context , List<Datum> list)
-        {
+        public BillAdapter(Context context, List<com.southman.southmanclient.vHistoryPOJO.Datum> list) {
             this.context = context;
             this.list = list;
         }
 
-        void setData(List<Datum> list)
-        {
+        void setData(List<com.southman.southmanclient.vHistoryPOJO.Datum> list) {
             this.list = list;
             notifyDataSetChanged();
         }
@@ -237,8 +253,8 @@ public class Bills22 extends Fragment {
         @NonNull
         @Override
         public ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
-            LayoutInflater inflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            View view = inflater.inflate(R.layout.redeem_list_mode2 , viewGroup , false);
+            LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            View view = inflater.inflate(R.layout.order_list_model1, viewGroup, false);
             return new ViewHolder(view);
         }
 
@@ -247,140 +263,70 @@ public class Bills22 extends Fragment {
 
             final Datum item = list.get(i);
 
-
-            holder.verify.setText(item.getStatus());
-
-            holder.cancel.setVisibility(View.GONE);
+            holder.status.setText(item.getCreated());
 
 
-            if (item.getTake().equals("yes"))
+            holder.type.setText(item.getTxn());
+            holder.code.setText(item.getUser() + " paid \u20B9 " + item.getAmount() + " to " + item.getClient());
+            holder.type.setTextColor(Color.parseColor("#009688"));
+
+            holder.date.setVisibility(View.GONE);
+            //holder.price.setVisibility(View.VISIBLE);
+
+            if (item.getMode().equals("GPAY"))
             {
-                holder.take.setVisibility(View.VISIBLE);
+                holder.type.setCompoundDrawablesRelativeWithIntrinsicBounds(R.drawable.ic_google_pay_mark_800_gray , 0 , 0 , 0);
             }
             else
             {
-                holder.take.setVisibility(View.GONE);
+                holder.type.setCompoundDrawablesRelativeWithIntrinsicBounds(R.drawable.ic_money2 , 0 , 0 , 0);
             }
 
+            holder.paid.setText("completed");
 
-            holder.client.setText(item.getClient());
-
-            switch (item.getText()) {
-                case "perks":
-                    holder.order.setText("ORDER NO. - " + item.getId());
-                    holder.order.setTextColor(Color.parseColor("#009688"));
-
-                    //holder.price.setText("Benefits - " + item.getPrice() + " credits");
-
-                    float pr = Float.parseFloat(item.getPrice());
-                    float pa = Float.parseFloat(item.getCashValue());
-
-                    //holder.paid.setText("Pending benefits - " + String.valueOf(pr - pa) + " credits");
-
-                    break;
-                case "cash":
-                    if (item.getTableName().equals(""))
-                    {
-                        holder.order.setText("ORDER NO. - " + item.getId());
-                    }
-                    else
-                    {
-                        holder.order.setText("ORDER NO. - " + item.getId() + " (Table - " + item.getTableName() + ")");
-                    }
-                    holder.customer.setText(item.getUser());
-                    holder.order.setTextColor(Color.parseColor("#689F38"));
-
-                    holder.cash.setText(Html.fromHtml("Rs." + item.getCashRewards()));
-                    holder.scratch.setText(Html.fromHtml("Rs." + item.getScratchAmount()));
-
-//                    float pr1 = Float.parseFloat(item.getPrice());
-                    //                  float pa1 = Float.parseFloat(item.getCashValue());
-
-                    //                holder.paid.setText("Balance pay - Rs." + String.valueOf(pr1 - pa1));
-
-                    if (item.getBillAmount().equals("")) {
-
-                        holder.total.setText(Html.fromHtml("unverified"));
-                        holder.collect.setText(Html.fromHtml("unverified"));
-
-                    } else {
-
-                        float c = Float.parseFloat(item.getCashRewards());
-                        float s = Float.parseFloat(item.getScratchAmount());
-                        float t = Float.parseFloat(item.getBillAmount());
-
-                        holder.total.setText(Html.fromHtml("Rs." + item.getBillAmount()));
-                        holder.collect.setText(Html.fromHtml("Rs." + String.valueOf(t - (c + s))));
-
-
-                    }
-
-
-                    break;
-                case "scratch":
-                    if (item.getTableName().equals(""))
-                    {
-                        holder.order.setText("ORDER NO. - " + item.getId());
-                    }
-                    else
-                    {
-                        holder.order.setText("ORDER NO. - " + item.getId() + " (Table - " + item.getTableName() + ")");
-                    }
-                    holder.customer.setText(item.getUser());
-                    holder.order.setTextColor(Color.parseColor("#689F38"));
-
-                    holder.cash.setText(Html.fromHtml("Rs." + item.getCashRewards()));
-                    holder.scratch.setText(Html.fromHtml("Rs." + item.getScratchAmount()));
-
-//                    float pr1 = Float.parseFloat(item.getPrice());
-                    //                  float pa1 = Float.parseFloat(item.getCashValue());
-
-                    //                holder.paid.setText("Balance pay - Rs." + String.valueOf(pr1 - pa1));
-
-                    if (item.getBillAmount().equals("")) {
-
-                        holder.total.setText(Html.fromHtml("unverified"));
-                        holder.collect.setText(Html.fromHtml("unverified"));
-
-                    } else {
-
-                        float c = Float.parseFloat(item.getCashRewards());
-                        float s = Float.parseFloat(item.getScratchAmount());
-                        float t = Float.parseFloat(item.getBillAmount());
-
-                        holder.total.setText(Html.fromHtml("Rs." + item.getBillAmount()));
-                        holder.collect.setText(Html.fromHtml("Rs." + String.valueOf(t - (c + s))));
-
-
-                    }
-                    break;
-            }
-
-
-            final DisplayImageOptions options = new DisplayImageOptions.Builder().cacheOnDisk(true).cacheInMemory(true).resetViewBeforeLoading(false).build();
-
-
-            final ImageLoader loader = ImageLoader.getInstance();
-
-            loader.displayImage(item.getBill() , holder.bill , options);
-
-            holder.bill.setOnClickListener(new View.OnClickListener() {
+            holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
-                public void onClick(View v) {
+                public void onClick(View view) {
 
-                    Dialog dialog = new Dialog(context);
-                    dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-                    dialog.setCancelable(true);
-                    dialog.setContentView(R.layout.zoom_dialog);
-                    dialog.show();
+                    if (item.getMode().equals("GPAY"))
+                    {
+                        Intent intent = new Intent(context , StatusActivity5.class);
+                        intent.putExtra("id" , item.getId());
+                        context.startActivity(intent);
+                    }
+                    else
+                    {
 
-                    ZoomageView zoom = dialog.findViewById(R.id.zoom);
+                        if (item.getStatus().equals("pending"))
+                        {
 
-                    loader.displayImage(item.getBill() , zoom , options);
+                            /*Intent intent = new Intent(context , CollectCash.class);
+                            intent.putExtra("id" , item.getId());
+                            intent.putExtra("cash" , item.getCash());
+                            intent.putExtra("scratch" , item.getScratch());
+                            intent.putExtra("pid" , item.getPid());
+                            intent.putExtra("amount" , item.getAmount());
+                            intent.putExtra("tid" , item.getTxn());
+                            intent.putExtra("date" , item.getCreated());
+                            intent.putExtra("user_id" , item.getUser_id());
+                            context.startActivity(intent);*/
+
+                        }
+                        else
+                        {
+                            Intent intent = new Intent(context , StatusActivity5.class);
+                            intent.putExtra("id" , item.getId());
+                            context.startActivity(intent);
+                        }
+
+                    }
+
 
 
                 }
             });
+
+
 
         }
 
@@ -389,29 +335,36 @@ public class Bills22 extends Fragment {
             return list.size();
         }
 
-        class ViewHolder extends RecyclerView.ViewHolder
-        {
-            TextView order, customer, cash, scratch, total, collect , client;
-            Button verify, cancel;
-            ImageView bill , take;
+        class ViewHolder extends RecyclerView.ViewHolder {
+            final TextView code;
+            final TextView date;
+            final TextView type;
+            final TextView status;
+            final TextView price;
+            final TextView paid;
 
             ViewHolder(@NonNull View itemView) {
                 super(itemView);
-                order = itemView.findViewById(R.id.order);
-                customer = itemView.findViewById(R.id.user);
-                cash = itemView.findViewById(R.id.cash);
-                scratch = itemView.findViewById(R.id.scratch);
-                total = itemView.findViewById(R.id.total);
-                collect = itemView.findViewById(R.id.collect);
-                verify = itemView.findViewById(R.id.verify);
-                cancel = itemView.findViewById(R.id.cancel);
-                bill = itemView.findViewById(R.id.bill);
-                take = itemView.findViewById(R.id.take);
-                client = itemView.findViewById(R.id.client);
+
+                code = itemView.findViewById(R.id.code);
+                date = itemView.findViewById(R.id.date);
+                type = itemView.findViewById(R.id.type);
+                status = itemView.findViewById(R.id.status);
+                price = itemView.findViewById(R.id.price);
+                paid = itemView.findViewById(R.id.paid);
+
+
             }
         }
     }
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+
+        LocalBroadcastManager.getInstance(getContext()).unregisterReceiver(singleReceiver);
+
+    }
 
 
 }

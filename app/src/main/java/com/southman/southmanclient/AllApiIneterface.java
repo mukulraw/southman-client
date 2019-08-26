@@ -114,14 +114,14 @@ public interface AllApiIneterface {
 
     @Multipart
     @POST("southman/api/getOrders31.php")
-    Call<voucherBean> getOrders31(
+    Call<vHistoryBean> getOrders31(
             @Part("id") String client,
             @Part("date") String date
     );
 
     @Multipart
     @POST("southman/api/getOrders32.php")
-    Call<orderBean> getOrders32(
+    Call<vHistoryBean> getOrders32(
             @Part("id") String client,
             @Part("date") String date
     );

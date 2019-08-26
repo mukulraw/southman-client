@@ -1,12 +1,16 @@
 package com.southman.southmanclient;
 
 import android.app.Dialog;
+import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -22,7 +26,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.southman.southmanclient.orderPOJO.orderBean;
-import com.southman.southmanclient.voucherPOJO.Datum;
+import com.southman.southmanclient.vHistoryPOJO.Datum;
+import com.southman.southmanclient.vHistoryPOJO.vHistoryBean;
 import com.southman.southmanclient.voucherPOJO.voucherBean;
 
 import java.text.SimpleDateFormat;
@@ -43,24 +48,27 @@ public class Bills2 extends Fragment {
     RecyclerView grid;
     GridLayoutManager manager;
     ProgressBar progress;
-    List<Datum> list;
+    List<com.southman.southmanclient.vHistoryPOJO.Datum> list;
     BillAdapter adapter;
     TextView date;
     LinearLayout linear;
 
+    String dd;
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.bill_layout , container , false);
+        View view = inflater.inflate(R.layout.bill_layout, container, false);
 
         list = new ArrayList<>();
-        date = view.findViewById(R.id.date);
+
         linear = view.findViewById(R.id.linear);
+        date = view.findViewById(R.id.date);
         grid = view.findViewById(R.id.grid);
-        manager = new GridLayoutManager(getContext() , 1);
+        manager = new GridLayoutManager(getContext(), 1);
         progress = view.findViewById(R.id.progress);
 
-        adapter = new BillAdapter(getActivity() , list);
+        adapter = new BillAdapter(getActivity(), list);
 
         grid.setAdapter(adapter);
         grid.setLayoutManager(manager);
@@ -101,7 +109,7 @@ public class Bills2 extends Fragment {
 
                         date.setText("Date - " + strDate + " (click to change)");
 
-
+                        dd = strDate;
 
                         progress.setVisibility(View.VISIBLE);
 
@@ -116,22 +124,19 @@ public class Bills2 extends Fragment {
                         AllApiIneterface cr = retrofit.create(AllApiIneterface.class);
 
 
-                        Call<voucherBean> call = cr.getOrders31(SharePreferenceUtils.getInstance().getString("id") , strDate);
+                        Call<vHistoryBean> call = cr.getOrders31(SharePreferenceUtils.getInstance().getString("id"), dd);
 
-                        call.enqueue(new Callback<voucherBean>() {
+                        call.enqueue(new Callback<vHistoryBean>() {
                             @Override
-                            public void onResponse(Call<voucherBean> call, Response<voucherBean> response) {
+                            public void onResponse(Call<vHistoryBean> call, Response<vHistoryBean> response) {
 
-                                if (response.body().getStatus().equals("1"))
-                                {
+                                if (response.body().getStatus().equals("1")) {
                                     adapter.setData(response.body().getData());
                                     linear.setVisibility(View.GONE);
-                                }
-                                else
-                                {
+                                } else {
                                     adapter.setData(response.body().getData());
                                     linear.setVisibility(View.VISIBLE);
-                                 //   Toast.makeText(getContext(), response.body().getMessage(), Toast.LENGTH_SHORT).show();
+                                    //Toast.makeText(getContext(), response.body().getMessage(), Toast.LENGTH_SHORT).show();
                                 }
 
                                 progress.setVisibility(View.GONE);
@@ -139,36 +144,52 @@ public class Bills2 extends Fragment {
                             }
 
                             @Override
-                            public void onFailure(Call<voucherBean> call, Throwable t) {
+                            public void onFailure(Call<vHistoryBean> call, Throwable t) {
                                 progress.setVisibility(View.GONE);
                             }
                         });
-
 
 
                     }
                 });
 
 
-
             }
         });
-
-        return view;
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-
 
         Date c = Calendar.getInstance().getTime();
         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
         String formattedDate = df.format(c);
 
-        Log.d("dddd" , formattedDate);
+        Log.d("dddd", formattedDate);
 
         date.setText("Date - " + formattedDate + " (click to change)");
+
+        dd = formattedDate;
+
+        singleReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+
+                if (intent.getAction().equals("count")) {
+                    onResume();
+                }
+
+            }
+        };
+
+        LocalBroadcastManager.getInstance(getContext()).registerReceiver(singleReceiver,
+                new IntentFilter("count"));
+
+        return view;
+    }
+
+    BroadcastReceiver singleReceiver;
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
 
 
         progress.setVisibility(View.VISIBLE);
@@ -184,29 +205,27 @@ public class Bills2 extends Fragment {
         AllApiIneterface cr = retrofit.create(AllApiIneterface.class);
 
 
-        Call<voucherBean> call = cr.getOrders31(SharePreferenceUtils.getInstance().getString("id") , formattedDate);
+        Call<vHistoryBean> call = cr.getOrders31(SharePreferenceUtils.getInstance().getString("id"), dd);
 
-        call.enqueue(new Callback<voucherBean>() {
+        call.enqueue(new Callback<vHistoryBean>() {
             @Override
-            public void onResponse(Call<voucherBean> call, Response<voucherBean> response) {
+            public void onResponse(Call<vHistoryBean> call, Response<vHistoryBean> response) {
 
-                if (response.body().getStatus().equals("1"))
-                {
+                if (response.body().getStatus().equals("1")) {
                     adapter.setData(response.body().getData());
                     linear.setVisibility(View.GONE);
-                }
-                else
-                {
+                } else {
                     adapter.setData(response.body().getData());
                     linear.setVisibility(View.VISIBLE);
-                    //   Toast.makeText(getContext(), response.body().getMessage(), Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(getContext(), response.body().getMessage(), Toast.LENGTH_SHORT).show();
                 }
+
                 progress.setVisibility(View.GONE);
 
             }
 
             @Override
-            public void onFailure(Call<voucherBean> call, Throwable t) {
+            public void onFailure(Call<vHistoryBean> call, Throwable t) {
                 progress.setVisibility(View.GONE);
             }
         });
@@ -214,19 +233,16 @@ public class Bills2 extends Fragment {
 
     }
 
-    class BillAdapter extends RecyclerView.Adapter<BillAdapter.ViewHolder>
-    {
+    class BillAdapter extends RecyclerView.Adapter<BillAdapter.ViewHolder> {
         Context context;
-        List<Datum> list = new ArrayList<>();
+        List<com.southman.southmanclient.vHistoryPOJO.Datum> list = new ArrayList<>();
 
-        public BillAdapter(Context context , List<Datum> list)
-        {
+        public BillAdapter(Context context, List<com.southman.southmanclient.vHistoryPOJO.Datum> list) {
             this.context = context;
             this.list = list;
         }
 
-        void setData(List<Datum> list)
-        {
+        void setData(List<com.southman.southmanclient.vHistoryPOJO.Datum> list) {
             this.list = list;
             notifyDataSetChanged();
         }
@@ -234,8 +250,8 @@ public class Bills2 extends Fragment {
         @NonNull
         @Override
         public ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
-            LayoutInflater inflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            View view = inflater.inflate(R.layout.order_list_model1 , viewGroup , false);
+            LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            View view = inflater.inflate(R.layout.order_list_model1, viewGroup, false);
             return new ViewHolder(view);
         }
 
@@ -244,13 +260,30 @@ public class Bills2 extends Fragment {
 
             final Datum item = list.get(i);
 
-            holder.date.setText(item.getCreated());
+            holder.status.setText(item.getCreated());
 
-            holder.user.setText(item.getUser() + " purchased Scratch Card worth Rs. " + item.getAmount() + " for " + item.getClient());
 
-                    holder.type.setText("VOUCHER STORE");
-                    holder.type.setTextColor(Color.parseColor("#009688"));
+            holder.type.setText(item.getTxn());
+            holder.code.setText(item.getUser_id() + " paid \u20B9 " + item.getAmount() + " to " + item.getClient());
+            holder.type.setTextColor(Color.parseColor("#009688"));
 
+            holder.date.setVisibility(View.GONE);
+            //holder.price.setVisibility(View.VISIBLE);
+
+
+
+            holder.paid.setText("completed");
+
+            holder.itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+
+                    /*Intent intent = new Intent(context , StatusActivity.class);
+                    intent.putExtra("id" , item.getId());
+                    context.startActivity(intent);*/
+
+                }
+            });
 
 
 
@@ -261,18 +294,35 @@ public class Bills2 extends Fragment {
             return list.size();
         }
 
-        class ViewHolder extends RecyclerView.ViewHolder
-        {
-            TextView date, type , user;
+        class ViewHolder extends RecyclerView.ViewHolder {
+            final TextView code;
+            final TextView date;
+            final TextView type;
+            final TextView status;
+            final TextView price;
+            final TextView paid;
 
             ViewHolder(@NonNull View itemView) {
                 super(itemView);
+
+                code = itemView.findViewById(R.id.code);
                 date = itemView.findViewById(R.id.date);
                 type = itemView.findViewById(R.id.type);
-                user = itemView.findViewById(R.id.user);
+                status = itemView.findViewById(R.id.status);
+                price = itemView.findViewById(R.id.price);
+                paid = itemView.findViewById(R.id.paid);
+
 
             }
         }
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+
+        LocalBroadcastManager.getInstance(getContext()).unregisterReceiver(singleReceiver);
+
     }
 
 
