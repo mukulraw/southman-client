@@ -257,15 +257,15 @@ public class TransHistory extends AppCompatActivity {
 
             final Datum item = list.get(i);
 
-            holder.purchase.setText("Rs." + item.getItemsPurchased());
-            holder.scratch.setText("Rs." + item.getScratchCardsRedeemed());
-            holder.perks.setText(item.getPerksRedeemed() + " credits");
-            holder.cash.setText("Rs." + item.getCashRewardsRedeemed());
-            holder.bills.setText(item.getBillsUploaded());
-            holder.amount.setText("Rs." + item.getVerifiedBillsAmount());
+            holder.voucher.setText("\u20B9 " + item.getVoucher());
+            holder.redeem.setText("\u20B9 " + item.getRedeem());
+            holder.gpay.setText("\u20B9 " + item.getGpay());
+            holder.cash.setText("\u20B9 " + item.getCash());
+            holder.fromsoouthman.setText("\u20B9 " + item.getFromSouthman());
+            holder.tosouthman.setText("\u20B9 " + item.getToSouthman());
             holder.date.setText(item.getCreated());
-            holder.fromsoouthman.setText("Rs." + item.getFromSouthman());
-            holder.tosouthman.setText("Rs." + item.getToSouthman());
+            holder.fromsoouthman.setText("\u20B9 " + item.getFromSouthman());
+            holder.tosouthman.setText("\u20B9 " + item.getToSouthman());
 
 
         }
@@ -276,18 +276,16 @@ public class TransHistory extends AppCompatActivity {
         }
 
         class ViewHolder extends RecyclerView.ViewHolder {
-            TextView purchase, scratch, perks, cash, bills, amount, date , fromsoouthman , tosouthman;
+            TextView voucher, redeem, gpay, cash, fromsoouthman , tosouthman  ,date;
 
             ViewHolder(@NonNull View itemView) {
                 super(itemView);
 
                 date = itemView.findViewById(R.id.date);
-                purchase = itemView.findViewById(R.id.purchase);
-                scratch = itemView.findViewById(R.id.scratch);
-                perks = itemView.findViewById(R.id.perks);
+                voucher = itemView.findViewById(R.id.voucher);
+                redeem = itemView.findViewById(R.id.redeem);
+                gpay = itemView.findViewById(R.id.gpay);
                 cash = itemView.findViewById(R.id.cash);
-                bills = itemView.findViewById(R.id.bills);
-                amount = itemView.findViewById(R.id.amount);
                 fromsoouthman = itemView.findViewById(R.id.from_southman);
                 tosouthman = itemView.findViewById(R.id.to_southman);
 

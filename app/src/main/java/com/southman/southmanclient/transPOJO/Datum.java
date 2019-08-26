@@ -10,34 +10,27 @@ public class Datum {
     @SerializedName("client")
     @Expose
     private String client;
-    @SerializedName("items_purchased")
+    @SerializedName("voucher")
     @Expose
-    private String itemsPurchased;
-    @SerializedName("verified_bills_amount")
+    private String voucher;
+    @SerializedName("redeem")
     @Expose
-    private String verifiedBillsAmount;
-    @SerializedName("perks_redeemed")
+    private String redeem;
+    @SerializedName("gpay")
     @Expose
-    private String perksRedeemed;
-    @SerializedName("cash_rewards_redeemed")
+    private String gpay;
+    @SerializedName("cash")
     @Expose
-    private String cashRewardsRedeemed;
-    @SerializedName("scratch_cards_redeemed")
-    @Expose
-    private String scratchCardsRedeemed;
-    @SerializedName("bills_uploaded")
-    @Expose
-    private String billsUploaded;
-    @SerializedName("created")
-    @Expose
-    private String created;
+    private String cash;
     @SerializedName("to_southman")
     @Expose
     private String toSouthman;
     @SerializedName("from_southman")
     @Expose
     private String fromSouthman;
-
+    @SerializedName("created")
+    @Expose
+    private String created;
 
     public String getId() {
         return id;
@@ -55,52 +48,52 @@ public class Datum {
         this.client = client;
     }
 
-    public String getItemsPurchased() {
-        return itemsPurchased;
+    public String getVoucher() {
+        return voucher;
     }
 
-    public void setItemsPurchased(String itemsPurchased) {
-        this.itemsPurchased = itemsPurchased;
+    public void setVoucher(String voucher) {
+        this.voucher = voucher;
     }
 
-    public String getVerifiedBillsAmount() {
-        return verifiedBillsAmount;
+    public String getRedeem() {
+        return redeem;
     }
 
-    public void setVerifiedBillsAmount(String verifiedBillsAmount) {
-        this.verifiedBillsAmount = verifiedBillsAmount;
+    public void setRedeem(String redeem) {
+        this.redeem = redeem;
     }
 
-    public String getPerksRedeemed() {
-        return perksRedeemed;
+    public String getGpay() {
+        return gpay;
     }
 
-    public void setPerksRedeemed(String perksRedeemed) {
-        this.perksRedeemed = perksRedeemed;
+    public void setGpay(String gpay) {
+        this.gpay = gpay;
     }
 
-    public String getCashRewardsRedeemed() {
-        return cashRewardsRedeemed;
+    public String getCash() {
+        return cash;
     }
 
-    public void setCashRewardsRedeemed(String cashRewardsRedeemed) {
-        this.cashRewardsRedeemed = cashRewardsRedeemed;
+    public void setCash(String cash) {
+        this.cash = cash;
     }
 
-    public String getScratchCardsRedeemed() {
-        return scratchCardsRedeemed;
+    public String getToSouthman() {
+        return toSouthman;
     }
 
-    public void setScratchCardsRedeemed(String scratchCardsRedeemed) {
-        this.scratchCardsRedeemed = scratchCardsRedeemed;
+    public void setToSouthman(String toSouthman) {
+        this.toSouthman = toSouthman;
     }
 
-    public String getBillsUploaded() {
-        return billsUploaded;
+    public String getFromSouthman() {
+        return fromSouthman;
     }
 
-    public void setBillsUploaded(String billsUploaded) {
-        this.billsUploaded = billsUploaded;
+    public void setFromSouthman(String fromSouthman) {
+        this.fromSouthman = fromSouthman;
     }
 
     public String getCreated() {
@@ -109,21 +102,5 @@ public class Datum {
 
     public void setCreated(String created) {
         this.created = created;
-    }
-
-    public String getFromSouthman() {
-        return fromSouthman;
-    }
-
-    public String getToSouthman() {
-        return toSouthman;
-    }
-
-    public void setFromSouthman(String fromSouthman) {
-        this.fromSouthman = fromSouthman;
-    }
-
-    public void setToSouthman(String toSouthman) {
-        this.toSouthman = toSouthman;
     }
 }
