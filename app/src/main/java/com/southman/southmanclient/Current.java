@@ -32,13 +32,13 @@ public class Current extends AppCompatActivity {
 
     Button complete;
 
-    TextView purchase, scratch, perks, cash, bills, amount , history , fromsoouthman , tosouthman;
+    TextView voucher, redeem, gpay, cash, fromsoouthman , tosouthman , history;
     ProgressBar progress;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_current);
+        setContentView(R.layout.activity_current2);
 
         name = getIntent().getStringExtra("name");
         id = getIntent().getStringExtra("id");
@@ -46,14 +46,12 @@ public class Current extends AppCompatActivity {
 
         toolbar = findViewById(R.id.toolbar);
         complete = findViewById(R.id.complete);
-        purchase = findViewById(R.id.purchase);
-        scratch = findViewById(R.id.scratch);
-        perks = findViewById(R.id.perks);
+        voucher = findViewById(R.id.voucher);
+        redeem = findViewById(R.id.redeem);
+        gpay = findViewById(R.id.gpay);
         cash = findViewById(R.id.cash);
-        bills = findViewById(R.id.bills);
-        amount = findViewById(R.id.amount);
-        progress = findViewById(R.id.progress);
         history = findViewById(R.id.history);
+        progress = findViewById(R.id.progress);
         fromsoouthman = findViewById(R.id.from_southman);
         tosouthman = findViewById(R.id.to_southman);
 
@@ -206,15 +204,13 @@ public class Current extends AppCompatActivity {
 
                     Data item = response.body().getData();
 
-                    purchase.setText("Rs." + item.getItemsPurchased());
-                    scratch.setText("Rs." + item.getScratchCardsRedeemed());
-                    perks.setText(item.getPerksRedeemed() + " credits");
-                    cash.setText("Rs." + item.getCashRewardsRedeemed());
-                    bills.setText(item.getBillsUploaded());
-                    amount.setText("Rs." + item.getVerifiedBillsAmount());
 
-                    fromsoouthman.setText("Rs." + item.getFromSouthman());
-                    tosouthman.setText("Rs." + item.getToSouthman());
+                    voucher.setText("\u20B9 " + item.getVoucher());
+                    redeem.setText("\u20B9 " + item.getRedeem());
+                    gpay.setText("\u20B9 " + item.getGpay());
+                    cash.setText("\u20B9 " + item.getCash());
+                    fromsoouthman.setText("\u20B9 " + item.getFromSouthman());
+                    tosouthman.setText("\u20B9 " + item.getToSouthman());
 
                 }
 
