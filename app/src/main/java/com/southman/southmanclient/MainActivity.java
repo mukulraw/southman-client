@@ -173,7 +173,8 @@ public class MainActivity extends AppCompatActivity {
 
         String[] titles = {
                 "Voucher Store",
-                "Redeem Store"
+                "Redeem Store",
+                "Benefited Customers"
         };
 
         PagerAdapter(FragmentManager fm, int list) {
@@ -193,15 +194,19 @@ public class MainActivity extends AppCompatActivity {
 
                 return new Bills();
             }
-            else
+            else if (i == 1)
             {
                 return new Bills12();
+            }
+            else
+            {
+                return new Benefits();
             }
         }
 
         @Override
         public int getCount() {
-            return 2;
+            return 3;
         }
     }
 

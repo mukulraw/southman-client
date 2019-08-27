@@ -1,5 +1,6 @@
 package com.southman.southmanclient;
 
+import com.southman.southmanclient.benefitsPOJO.benefitsBean;
 import com.southman.southmanclient.billPOJO.billBean;
 import com.southman.southmanclient.clientsPOJO.clientsBean;
 import com.southman.southmanclient.currentPOJO.currentBean;
@@ -129,6 +130,13 @@ public interface AllApiIneterface {
     @Multipart
     @POST("southman/api/getOrders33.php")
     Call<orderBean> getOrders33(
+            @Part("id") String client,
+            @Part("date") String date
+    );
+
+    @Multipart
+    @POST("southman/api/getBenefits.php")
+    Call<benefitsBean> getBenefits(
             @Part("id") String client,
             @Part("date") String date
     );
