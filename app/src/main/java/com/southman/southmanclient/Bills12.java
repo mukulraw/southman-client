@@ -312,6 +312,7 @@ public class Bills12 extends Fragment {
             }
 
 
+
             holder.paid.setText(item.getStatus());
 
             holder.itemView.setOnClickListener(new View.OnClickListener() {
@@ -339,6 +340,7 @@ public class Bills12 extends Fragment {
                             intent.putExtra("tid" , item.getTxn());
                             intent.putExtra("date" , item.getCreated());
                             intent.putExtra("user_id" , item.getUser_id());
+                            intent.putExtra("user" , item.getClient());
                             context.startActivity(intent);
 
                         }

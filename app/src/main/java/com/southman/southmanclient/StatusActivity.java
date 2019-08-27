@@ -91,7 +91,7 @@ public class StatusActivity extends AppCompatActivity {
                 status.setText("Payment Successful");
                 amount.setText("\u20B9 " + response.body().getData().getAmount());
                 amount.setCompoundDrawablesWithIntrinsicBounds(null , getResources().getDrawable(R.drawable.ic_checked) , null , null);
-                client_name.setText(response.body().getData().getClient());
+                client_name.setText(response.body().getData().getUser());
                 client_name.setVisibility(View.VISIBLE);
                 date.setText(response.body().getData().getCreated());
                 back.setVisibility(View.VISIBLE);

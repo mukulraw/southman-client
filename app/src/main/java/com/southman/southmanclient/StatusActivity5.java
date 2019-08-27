@@ -184,7 +184,7 @@ public class StatusActivity5 extends AppCompatActivity {
                 }
 
 
-                client_name.setText(response.body().getData().getClient());
+                client_name.setText(response.body().getData().getUser());
                 client_name.setVisibility(View.VISIBLE);
                 date.setText(response.body().getData().getCreated());
                 back.setVisibility(View.VISIBLE);

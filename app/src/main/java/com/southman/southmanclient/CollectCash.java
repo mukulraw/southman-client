@@ -40,7 +40,7 @@ public class CollectCash extends AppCompatActivity {
 
     TextView tid1, status1, cashdiscount, scratchcard, bill, balance;
 
-    String oid , cash , scratch , pid , amm , txn , dd , uid;
+    String oid , cash , scratch , pid , amm , txn , dd , uid , user;
 
     Button approve , reject;
 
@@ -57,6 +57,7 @@ public class CollectCash extends AppCompatActivity {
         txn = getIntent().getStringExtra("tid");
         dd = getIntent().getStringExtra("date");
         uid = getIntent().getStringExtra("user_id");
+        user = getIntent().getStringExtra("user");
 
         status = findViewById(R.id.textView14);
         amount = findViewById(R.id.textView16);
@@ -90,7 +91,7 @@ public class CollectCash extends AppCompatActivity {
 
         float nb = tb - (ca + sc);
 
-        client_name.setText("Please collect \u20B9 " + nb);
+        client_name.setText("Please collect \u20B9 " + nb + " from " + user);
 
         amount.setText(Html.fromHtml("\u20B9 " + String.valueOf(nb) + " <strike>\u20B9 " + amm + "</strike>"));
 
@@ -196,6 +197,8 @@ public class CollectCash extends AppCompatActivity {
                     @Override
                     public void onClick(View view) {
 
+                        dialog.dismiss();
+
                         progress.setVisibility(View.VISIBLE);
 
                         Bean b = (Bean) getApplicationContext();
@@ -210,7 +213,7 @@ public class CollectCash extends AppCompatActivity {
                         AllApiIneterface cr = retrofit.create(AllApiIneterface.class);
 
 
-                        Call<onlinePayBean> call = cr.cancelOrder(oid);
+                        Call<onlinePayBean> call = cr.cancelOrder(id);
 
                         call.enqueue(new Callback<onlinePayBean>() {
                             @Override
@@ -218,7 +221,7 @@ public class CollectCash extends AppCompatActivity {
 
                                 Toast.makeText(CollectCash.this, response.body().getMessage(), Toast.LENGTH_SHORT).show();
 
-                                dialog.dismiss();
+                                //dialog.dismiss();
 
                                 progress.setVisibility(View.GONE);
 
