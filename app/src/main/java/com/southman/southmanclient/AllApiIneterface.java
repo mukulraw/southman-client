@@ -187,6 +187,12 @@ public interface AllApiIneterface {
             @Part("date") String date
     );
 
+    @Multipart
+    @POST("southman/api/getProfit.php")
+    Call<profitBean> getProfit(
+            @Part("date") String date
+    );
+
     @GET("southman/api/getClients.php")
     Call<clientsBean> getClients();
 
