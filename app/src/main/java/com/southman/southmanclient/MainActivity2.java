@@ -114,7 +114,7 @@ public class MainActivity2 extends AppCompatActivity {
 
                         SharePreferenceUtils.getInstance().deletePref();
 
-                        Intent intent = new Intent(MainActivity2.this, Login.class);
+                        Intent intent = new Intent(MainActivity2.this, Splash.class);
                         startActivity(intent);
 
                         finishAffinity();

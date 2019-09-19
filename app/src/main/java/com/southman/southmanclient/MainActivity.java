@@ -109,7 +109,7 @@ public class MainActivity extends AppCompatActivity {
 
                         SharePreferenceUtils.getInstance().deletePref();
 
-                        Intent intent = new Intent(MainActivity.this , Login.class);
+                        Intent intent = new Intent(MainActivity.this , Splash.class);
                         startActivity(intent);
 
                         finishAffinity();
