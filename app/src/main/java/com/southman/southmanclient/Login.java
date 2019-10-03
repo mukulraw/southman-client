@@ -52,7 +52,7 @@ public class Login extends AppCompatActivity {
         pass = findViewById(R.id.password);
 
 
-        FirebaseInstanceId.getInstance().getInstanceId().addOnSuccessListener( Login.this,  new OnSuccessListener<InstanceIdResult>() {
+        /*FirebaseInstanceId.getInstance().getInstanceId().addOnSuccessListener( Login.this,  new OnSuccessListener<InstanceIdResult>() {
             @Override
             public void onSuccess(InstanceIdResult instanceIdResult) {
                 String newToken = instanceIdResult.getToken();
@@ -61,7 +61,7 @@ public class Login extends AppCompatActivity {
                 SharePreferenceUtils.getInstance().saveString("token" , newToken);
 
             }
-        });
+        });*/
 
 
         signup.setOnClickListener(new View.OnClickListener() {

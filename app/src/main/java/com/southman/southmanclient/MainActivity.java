@@ -100,11 +100,16 @@ public class MainActivity extends AppCompatActivity {
                     public void onClick(View v) {
 
 
-                        try {
-                            FirebaseInstanceId.getInstance().deleteInstanceId();
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
+                        new Thread(new Runnable() {
+                            @Override
+                            public void run() {
+                                try {
+                                    FirebaseInstanceId.getInstance().deleteInstanceId();
+                                } catch (IOException e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                        }).start();
 
 
                         SharePreferenceUtils.getInstance().deletePref();
