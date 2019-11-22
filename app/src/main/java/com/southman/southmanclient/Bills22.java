@@ -266,7 +266,7 @@ public class Bills22 extends Fragment {
             holder.status.setText(item.getCreated());
 
 
-            holder.type.setText(item.getTxn());
+            holder.type.setText("#" + item.getTxn());
             holder.code.setText(item.getUser() + " paid \u20B9 " + item.getAmount() + " to " + item.getClient());
             holder.type.setTextColor(Color.parseColor("#009688"));
 
@@ -277,9 +277,13 @@ public class Bills22 extends Fragment {
             {
                 holder.type.setCompoundDrawablesRelativeWithIntrinsicBounds(R.drawable.ic_google_pay_mark_800_gray , 0 , 0 , 0);
             }
-            else
+            else if (item.getMode().equals("CASH"))
             {
                 holder.type.setCompoundDrawablesRelativeWithIntrinsicBounds(R.drawable.ic_money2 , 0 , 0 , 0);
+            }
+            else
+            {
+                holder.type.setCompoundDrawablesRelativeWithIntrinsicBounds(R.drawable.ic_free , 0 , 0 , 0);
             }
 
             holder.paid.setText("completed");

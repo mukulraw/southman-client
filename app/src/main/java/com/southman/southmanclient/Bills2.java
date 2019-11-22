@@ -263,7 +263,7 @@ public class Bills2 extends Fragment {
             holder.status.setText(item.getCreated());
 
 
-            holder.type.setText(item.getTxn());
+            holder.type.setText("#" + item.getTxn());
             holder.code.setText(item.getUser_id() + " paid \u20B9 " + item.getAmount() + " to " + item.getClient());
             holder.type.setTextColor(Color.parseColor("#009688"));
 

@@ -278,7 +278,7 @@ public class Bills12 extends Fragment {
 
 
 
-            holder.type.setText(item.getTxn());
+            holder.type.setText("#" + item.getTxn());
 
             if (item.getMode().equals("GPAY"))
             {
@@ -306,9 +306,13 @@ public class Bills12 extends Fragment {
             {
                 holder.type.setCompoundDrawablesRelativeWithIntrinsicBounds(R.drawable.ic_google_pay_mark_800_gray , 0 , 0 , 0);
             }
-            else
+            else if (item.getMode().equals("CASH"))
             {
                 holder.type.setCompoundDrawablesRelativeWithIntrinsicBounds(R.drawable.ic_money2 , 0 , 0 , 0);
+            }
+            else
+            {
+                holder.type.setCompoundDrawablesRelativeWithIntrinsicBounds(R.drawable.ic_free , 0 , 0 , 0);
             }
 
 
@@ -319,7 +323,7 @@ public class Bills12 extends Fragment {
                 @Override
                 public void onClick(View view) {
 
-                    if (item.getMode().equals("GPAY"))
+                    if (item.getMode().equals("GPAY") || item.getMode().equals("FREE"))
                     {
                         Intent intent = new Intent(context , StatusActivity5.class);
                         intent.putExtra("id" , item.getId());

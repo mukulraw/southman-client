@@ -178,7 +178,7 @@ public class MainActivity extends AppCompatActivity {
 
         String[] titles = {
                 "Voucher Store",
-                "Redeem Store",
+                "Payment Store",
                 "Benefited Customers"
         };
 

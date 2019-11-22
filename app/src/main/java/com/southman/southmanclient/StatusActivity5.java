@@ -154,8 +154,12 @@ public class StatusActivity5 extends AppCompatActivity {
 
                 if (item.getMode().equals("CASH")) {
                     gpay.setImageDrawable(getResources().getDrawable(R.drawable.ic_money2));
-                } else {
+                } else if (item.getMode().equals("GPAY")){
                     gpay.setImageDrawable(getResources().getDrawable(R.drawable.ic_google_pay_mark_800_gray));
+                }
+                else
+                {
+                    gpay.setImageDrawable(getResources().getDrawable(R.drawable.ic_free));
                 }
 
                 amount.setText(Html.fromHtml("\u20B9 " + String.valueOf(nb) + " <strike>\u20B9 " + item.getAmount() + "</strike>"));

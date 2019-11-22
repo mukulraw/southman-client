@@ -80,7 +80,7 @@ public class Login extends AppCompatActivity {
 
 
                 String u = email.getText().toString();
-                String p = pass.getText().toString();
+                final String p = pass.getText().toString();
 
                 if (u.length() > 0) {
                     if (p.length() > 0) {
@@ -113,6 +113,7 @@ public class Login extends AppCompatActivity {
                                     SharePreferenceUtils.getInstance().saveString("id" , response.body().getData().getId());
                                     SharePreferenceUtils.getInstance().saveString("name" , response.body().getData().getName());
                                     SharePreferenceUtils.getInstance().saveString("username" , response.body().getData().getUsername());
+                                    SharePreferenceUtils.getInstance().saveString("password" , p);
                                     SharePreferenceUtils.getInstance().saveString("type" , response.body().getData().getTyp());
 
                                     if (response.body().getData().getTyp().equals("admin"))
