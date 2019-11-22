@@ -35,8 +35,10 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.assist.FailReason;
 import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
 import com.southman.southmanclient.billPOJO.billBean;
+import com.southman.southmanclient.createOrderPOJO.createOrderBean;
 import com.southman.southmanclient.currentPOJO.currentBean;
 
+import com.southman.southmanclient.onlinePayPOJO.onlinePayBean;
 import com.southman.southmanclient.orderPOJO.orderBean;
 import com.southman.southmanclient.vHistoryPOJO.Datum;
 import com.southman.southmanclient.vHistoryPOJO.vHistoryBean;
@@ -66,6 +68,8 @@ public class Bills12 extends Fragment {
     LinearLayout linear;
 
     String dd;
+
+    float min = 0;
 
     @Nullable
     @Override
@@ -288,7 +292,15 @@ public class Bills12 extends Fragment {
             {
                 if (item.getStatus().equals("pending"))
                 {
-                    holder.code.setText(item.getClient() + " has requested to pay \u20B9 " + item.getAmount());
+                    if (item.getAmount().length() > 0)
+                    {
+                        holder.code.setText(item.getClient() + " has requested to pay \u20B9 " + item.getAmount());
+                    }
+                    else
+                    {
+                        holder.code.setText(item.getClient() + " has requested for final bill amount");
+                    }
+
                 }
                 else
                 {
@@ -335,17 +347,145 @@ public class Bills12 extends Fragment {
                         if (item.getStatus().equals("pending"))
                         {
 
-                            Intent intent = new Intent(context , CollectCash.class);
-                            intent.putExtra("id" , item.getId());
-                            intent.putExtra("cash" , item.getCash());
-                            intent.putExtra("scratch" , item.getScratch());
-                            intent.putExtra("pid" , item.getPid());
-                            intent.putExtra("amount" , item.getAmount());
-                            intent.putExtra("tid" , item.getTxn());
-                            intent.putExtra("date" , item.getCreated());
-                            intent.putExtra("user_id" , item.getUser_id());
-                            intent.putExtra("user" , item.getClient());
-                            context.startActivity(intent);
+                            if (item.getAmount().length() > 0)
+                            {
+                                Intent intent = new Intent(context , CollectCash.class);
+                                intent.putExtra("id" , item.getId());
+                                intent.putExtra("cash" , item.getCash());
+                                intent.putExtra("scratch" , item.getScratch());
+                                intent.putExtra("pid" , item.getPid());
+                                intent.putExtra("amount" , item.getAmount());
+                                intent.putExtra("tid" , item.getTxn());
+                                intent.putExtra("date" , item.getCreated());
+                                intent.putExtra("user_id" , item.getUser_id());
+                                intent.putExtra("user" , item.getClient());
+                                context.startActivity(intent);
+                            }
+                            else
+                            {
+                                final Dialog dialog3 = new Dialog(getActivity());
+                                dialog3.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                                dialog3.setCancelable(false);
+                                dialog3.setContentView(R.layout.enter_bill_amount_dialog);
+                                dialog3.show();
+
+
+                                final EditText amount = dialog3.findViewById(R.id.editText);
+                                Button confirm = dialog3.findViewById(R.id.button10);
+                                Button cancel = dialog3.findViewById(R.id.button11);
+                                final ProgressBar pbar = dialog3.findViewById(R.id.progressBar6);
+
+                                cancel.setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View view) {
+
+                                        dialog3.dismiss();
+
+                                        progress.setVisibility(View.VISIBLE);
+
+                                        Bean b = (Bean) getActivity().getApplicationContext();
+
+
+                                        Retrofit retrofit = new Retrofit.Builder()
+                                                .baseUrl(b.baseurl)
+                                                .addConverterFactory(ScalarsConverterFactory.create())
+                                                .addConverterFactory(GsonConverterFactory.create())
+                                                .build();
+
+                                        AllApiIneterface cr = retrofit.create(AllApiIneterface.class);
+
+
+                                        Call<onlinePayBean> call = cr.cancelOrder(item.getId());
+
+                                        call.enqueue(new Callback<onlinePayBean>() {
+                                            @Override
+                                            public void onResponse(Call<onlinePayBean> call, Response<onlinePayBean> response) {
+
+                                                Toast.makeText(getContext(), response.body().getMessage(), Toast.LENGTH_SHORT).show();
+
+                                                progress.setVisibility(View.GONE);
+
+                                                onResume();
+
+                                            }
+
+                                            @Override
+                                            public void onFailure(Call<onlinePayBean> call, Throwable t) {
+                                                progress.setVisibility(View.GONE);
+                                            }
+                                        });
+
+                                    }
+                                });
+
+
+                                confirm.setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View view) {
+
+
+                                        String aa = amount.getText().toString();
+
+                                        if (aa.length() > 0) {
+
+                                            float aaa = Float.parseFloat(aa);
+
+                                            if (aaa > min)
+                                            {
+                                                progress.setVisibility(View.VISIBLE);
+
+                                                Bean b = (Bean) getActivity().getApplicationContext();
+
+
+                                                Retrofit retrofit = new Retrofit.Builder()
+                                                        .baseUrl(b.baseurl)
+                                                        .addConverterFactory(ScalarsConverterFactory.create())
+                                                        .addConverterFactory(GsonConverterFactory.create())
+                                                        .build();
+
+                                                AllApiIneterface cr = retrofit.create(AllApiIneterface.class);
+
+                                                Call<createOrderBean> call = cr.createOrder(item.getId() , String.valueOf(aaa));
+                                                call.enqueue(new Callback<createOrderBean>() {
+                                                    @Override
+                                                    public void onResponse(Call<createOrderBean> call, Response<createOrderBean> response) {
+
+                                                        if (response.body().getStatus().equals("1")) {
+
+                                                            dialog3.dismiss();
+                                                            onResume();
+                                                        }
+
+                                                        Toast.makeText(getContext(), response.body().getMessage(), Toast.LENGTH_SHORT).show();
+
+                                                        progress.setVisibility(View.GONE);
+
+                                                    }
+
+                                                    @Override
+                                                    public void onFailure(Call<createOrderBean> call, Throwable t) {
+                                                        progress.setVisibility(View.GONE);
+                                                    }
+                                                });
+
+                                            }
+                                            else
+                                            {
+                                                Toast.makeText(getContext(), "Please enter a valid amount", Toast.LENGTH_SHORT).show();
+                                            }
+
+
+
+                                        } else {
+                                            Toast.makeText(getContext(), "Please enter a valid amount", Toast.LENGTH_SHORT).show();
+                                        }
+
+
+                                    }
+                                });
+                            }
+
+
 
                         }
                         else

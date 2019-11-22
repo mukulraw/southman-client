@@ -3,6 +3,7 @@ package com.southman.southmanclient;
 import com.southman.southmanclient.benefitsPOJO.benefitsBean;
 import com.southman.southmanclient.billPOJO.billBean;
 import com.southman.southmanclient.clientsPOJO.clientsBean;
+import com.southman.southmanclient.createOrderPOJO.createOrderBean;
 import com.southman.southmanclient.currentPOJO.currentBean;
 import com.southman.southmanclient.gPayPOJO.gPayBean;
 import com.southman.southmanclient.loginPOJO.loginBean;
@@ -181,6 +182,12 @@ public interface AllApiIneterface {
     );
 
     @Multipart
+    @POST("southman/api/cancelOrder.php")
+    Call<createOrderBean> cancelOrder2(
+            @Part("id") String id
+    );
+
+    @Multipart
     @POST("southman/api/getTrans.php")
     Call<transBean> getTrans(
             @Part("client") String client,
@@ -213,6 +220,13 @@ public interface AllApiIneterface {
     @POST("southman/api/getOrderHistory.php")
     Call<voucherHistoryBean> getOrderHistory(
             @Part("order_id") String order_id
+    );
+
+    @Multipart
+    @POST("southman/api/createOrder2.php")
+    Call<createOrderBean> createOrder(
+            @Part("oid") String oid,
+            @Part("amount") String amount
     );
 
 }

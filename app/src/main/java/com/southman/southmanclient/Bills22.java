@@ -286,7 +286,7 @@ public class Bills22 extends Fragment {
                 holder.type.setCompoundDrawablesRelativeWithIntrinsicBounds(R.drawable.ic_free , 0 , 0 , 0);
             }
 
-            holder.paid.setText("completed");
+            holder.paid.setText(item.getStatus());
 
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
