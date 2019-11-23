@@ -26,6 +26,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -280,9 +281,23 @@ public class Bills12 extends Fragment {
 
             holder.status.setText(item.getCreated());
 
-
+            try {
+                holder.price.setRating(Float.parseFloat(item.getRating()));
+            }catch (Exception e)
+            {
+                e.printStackTrace();
+            }
 
             holder.type.setText("#" + item.getTxn());
+
+            if (item.getStatus().equals("pending"))
+            {
+                holder.paid.setTextColor(Color.BLUE);
+            }
+            else
+            {
+                holder.paid.setTextColor(Color.parseColor("#E95959"));
+            }
 
             if (item.getMode().equals("GPAY"))
             {
@@ -514,7 +529,7 @@ public class Bills12 extends Fragment {
             final TextView date;
             final TextView type;
             final TextView status;
-            final TextView price;
+            final RatingBar price;
             final TextView paid;
 
             ViewHolder(@NonNull View itemView) {

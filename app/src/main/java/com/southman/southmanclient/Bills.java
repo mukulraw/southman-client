@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Color;
+import android.media.Rating;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -22,6 +23,7 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -270,7 +272,12 @@ public class Bills extends Fragment {
 
             holder.date.setVisibility(View.GONE);
             //holder.price.setVisibility(View.VISIBLE);
-
+            try {
+                holder.price.setRating(Float.parseFloat(item.getRating()));
+            }catch (Exception e)
+            {
+                e.printStackTrace();
+            }
 
 
             holder.paid.setText("completed");
@@ -300,7 +307,7 @@ public class Bills extends Fragment {
             final TextView date;
             final TextView type;
             final TextView status;
-            final TextView price;
+            final RatingBar price;
             final TextView paid;
 
             ViewHolder(@NonNull View itemView) {

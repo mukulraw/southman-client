@@ -22,6 +22,7 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -257,7 +258,7 @@ public class Bills2 extends Fragment {
 
         @Override
         public void onBindViewHolder(@NonNull ViewHolder holder, int i) {
-
+            holder.setIsRecyclable(false);
             final Datum item = list.get(i);
 
             holder.status.setText(item.getCreated());
@@ -269,8 +270,21 @@ public class Bills2 extends Fragment {
 
             holder.date.setVisibility(View.GONE);
             //holder.price.setVisibility(View.VISIBLE);
+            try {
+                holder.price.setRating(Float.parseFloat(item.getRating()));
+            }catch (Exception e)
+            {
+                e.printStackTrace();
+            }
 
-
+            if (item.getStatus().equals("pending"))
+            {
+                holder.paid.setTextColor(Color.BLUE);
+            }
+            else
+            {
+                holder.paid.setTextColor(Color.parseColor("#E95959"));
+            }
 
             holder.paid.setText("completed");
 
@@ -299,7 +313,7 @@ public class Bills2 extends Fragment {
             final TextView date;
             final TextView type;
             final TextView status;
-            final TextView price;
+            final RatingBar price;
             final TextView paid;
 
             ViewHolder(@NonNull View itemView) {
