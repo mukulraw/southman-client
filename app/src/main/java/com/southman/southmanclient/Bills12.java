@@ -30,6 +30,7 @@ import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.load.model.FileLoader;
 import com.jsibbold.zoomage.ZoomageView;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -384,11 +385,23 @@ public class Bills12 extends Fragment {
                                 dialog3.setContentView(R.layout.enter_bill_amount_dialog);
                                 dialog3.show();
 
+                                final float min = Float.parseFloat(SharePreferenceUtils.getInstance().getString("min"));
 
                                 final EditText amount = dialog3.findViewById(R.id.editText);
                                 Button confirm = dialog3.findViewById(R.id.button10);
+                                TextView mbill = dialog3.findViewById(R.id.textView5);
                                 Button cancel = dialog3.findViewById(R.id.button11);
                                 final ProgressBar pbar = dialog3.findViewById(R.id.progressBar6);
+
+                                if (min > 0)
+                                {
+                                    mbill.setText("Minimum bill amount is \u20B9 " + (min + 1));
+                                    mbill.setVisibility(View.VISIBLE);
+                                }
+                                else
+                                {
+                                    mbill.setVisibility(View.GONE);
+                                }
 
                                 cancel.setOnClickListener(new View.OnClickListener() {
                                     @Override
@@ -437,6 +450,7 @@ public class Bills12 extends Fragment {
                                 confirm.setOnClickListener(new View.OnClickListener() {
                                     @Override
                                     public void onClick(View view) {
+
 
 
                                         String aa = amount.getText().toString();

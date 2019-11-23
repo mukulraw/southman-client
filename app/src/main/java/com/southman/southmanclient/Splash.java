@@ -73,6 +73,7 @@ public class Splash extends AppCompatActivity {
                         SharePreferenceUtils.getInstance().saveString("username" , response.body().getData().getUsername());
                         SharePreferenceUtils.getInstance().saveString("password" , password);
                         SharePreferenceUtils.getInstance().saveString("type" , response.body().getData().getTyp());
+                        SharePreferenceUtils.getInstance().saveString("min" , response.body().getData().getMinimun_bill());
 
                         if (response.body().getData().getTyp().equals("admin"))
                         {

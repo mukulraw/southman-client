@@ -16,6 +16,9 @@ public class Data {
     @SerializedName("typ")
     @Expose
     private String typ;
+    @SerializedName("minimun_bill")
+    @Expose
+    private String minimun_bill;
 
     public String getId() {
         return id;
@@ -49,4 +52,11 @@ public class Data {
         this.typ = typ;
     }
 
+    public String getMinimun_bill() {
+        return minimun_bill;
+    }
+
+    public void setMinimun_bill(String minimun_bill) {
+        this.minimun_bill = minimun_bill;
+    }
 }
