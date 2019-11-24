@@ -32,6 +32,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -94,7 +95,7 @@ public class History extends AppCompatActivity {
 
 
         tabs.addTab(tabs.newTab().setText("VOUCHER"));
-        tabs.addTab(tabs.newTab().setText("REDEEM"));
+        tabs.addTab(tabs.newTab().setText("PAYMENT"));
 
         PagerAdapter adapter = new PagerAdapter(getSupportFragmentManager());
 
@@ -103,7 +104,7 @@ public class History extends AppCompatActivity {
         tabs.setupWithViewPager(grid);
 
         tabs.getTabAt(0).setText("VOUCHER");
-        tabs.getTabAt(1).setText("REDEEM");
+        tabs.getTabAt(1).setText("PAYMENT");
 
         grid.setOffscreenPageLimit(2);
 
@@ -800,14 +801,31 @@ public class History extends AppCompatActivity {
             @Override
             public void onBindViewHolder(@NonNull final ViewHolder holder, int i) {
 
+                holder.setIsRecyclable(false);
+
                 final com.southman.southmanclient.vHistoryPOJO.Datum item = list.get(i);
 
 
                 holder.status.setText(item.getCreated());
 
 
+                try {
+                    holder.price.setRating(Float.parseFloat(item.getRating()));
+                }catch (Exception e)
+                {
+                    e.printStackTrace();
+                }
 
-                holder.type.setText(item.getTxn());
+                holder.type.setText("#" + item.getTxn());
+
+                if (item.getStatus().equals("pending"))
+                {
+                    holder.paid.setTextColor(Color.BLUE);
+                }
+                else
+                {
+                    holder.paid.setTextColor(Color.parseColor("#E95959"));
+                }
 
                 if (item.getMode().equals("GPAY"))
                 {
@@ -835,9 +853,13 @@ public class History extends AppCompatActivity {
                 {
                     holder.type.setCompoundDrawablesRelativeWithIntrinsicBounds(R.drawable.ic_google_pay_mark_800_gray , 0 , 0 , 0);
                 }
-                else
+                else if (item.getMode().equals("CASH"))
                 {
                     holder.type.setCompoundDrawablesRelativeWithIntrinsicBounds(R.drawable.ic_money2 , 0 , 0 , 0);
+                }
+                else
+                {
+                    holder.type.setCompoundDrawablesRelativeWithIntrinsicBounds(R.drawable.ic_free , 0 , 0 , 0);
                 }
 
 
@@ -847,7 +869,7 @@ public class History extends AppCompatActivity {
                     @Override
                     public void onClick(View view) {
 
-                        if (item.getMode().equals("GPAY"))
+                        if (item.getMode().equals("GPAY") || item.getMode().equals("FREE"))
                         {
                             Intent intent = new Intent(context , StatusActivity5.class);
                             intent.putExtra("id" , item.getId());
@@ -897,7 +919,7 @@ public class History extends AppCompatActivity {
                 final TextView date;
                 final TextView type;
                 final TextView status;
-                final TextView price;
+                final RatingBar price;
                 final TextView paid;
 
                 ViewHolder(@NonNull View itemView) {

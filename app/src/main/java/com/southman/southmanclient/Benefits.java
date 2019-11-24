@@ -257,7 +257,7 @@ public class Benefits extends Fragment {
 
         @Override
         public void onBindViewHolder(@NonNull final ViewHolder holder, int i) {
-
+            holder.setIsRecyclable(false);
             final Datum item = list.get(i);
 
 

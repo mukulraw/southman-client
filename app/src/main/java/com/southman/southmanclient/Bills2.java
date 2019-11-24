@@ -277,14 +277,14 @@ public class Bills2 extends Fragment {
                 e.printStackTrace();
             }
 
-            if (item.getStatus().equals("pending"))
+            /*if (item.getStatus().equals("pending"))
             {
                 holder.paid.setTextColor(Color.BLUE);
             }
             else
             {
                 holder.paid.setTextColor(Color.parseColor("#E95959"));
-            }
+            }*/
 
             holder.paid.setText("completed");
 

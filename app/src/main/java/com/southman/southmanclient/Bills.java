@@ -261,6 +261,8 @@ public class Bills extends Fragment {
         @Override
         public void onBindViewHolder(@NonNull ViewHolder holder, int i) {
 
+            holder.setIsRecyclable(false);
+
             final Datum item = list.get(i);
 
             holder.status.setText(item.getCreated());
