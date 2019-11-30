@@ -143,13 +143,13 @@ public class TransHistory extends AppCompatActivity {
                             public void onResponse(Call<transBean> call, Response<transBean> response) {
 
                                 if (response.body().getStatus().equals("1")) {
-                                    adapter.setData(response.body().getData());
+
                                     linear.setVisibility(View.GONE);
                                 } else {
                                     linear.setVisibility(View.VISIBLE);
                                     //Toast.makeText(TransHistory.this, response.body().getMessage(), Toast.LENGTH_SHORT).show();
                                 }
-
+                                adapter.setData(response.body().getData());
                                 progress.setVisibility(View.GONE);
 
                             }
@@ -210,13 +210,13 @@ public class TransHistory extends AppCompatActivity {
             public void onResponse(Call<transBean> call, Response<transBean> response) {
 
                 if (response.body().getStatus().equals("1")) {
-                    adapter.setData(response.body().getData());
+
                     linear.setVisibility(View.GONE);
                 } else {
                     linear.setVisibility(View.VISIBLE);
                     //Toast.makeText(TransHistory.this, response.body().getMessage(), Toast.LENGTH_SHORT).show();
                 }
-
+                adapter.setData(response.body().getData());
                 progress.setVisibility(View.GONE);
 
             }
