@@ -162,7 +162,7 @@ public class StatusActivity5 extends AppCompatActivity {
                     gpay.setImageDrawable(getResources().getDrawable(R.drawable.ic_free));
                 }
 
-                amount.setText(Html.fromHtml("\u20B9 " + String.valueOf(nb) + " <strike>\u20B9 " + item.getAmount() + "</strike>"));
+                amount.setText(Html.fromHtml("<font color=#43a047>\u20B9 " + String.valueOf(nb) + "</font> <font color=red><strike>\u20B9 " + item.getAmount() + "</font></strike>"));
 
 
                 if (item.getStatus().equals("completed"))
