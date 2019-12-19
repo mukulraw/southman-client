@@ -177,9 +177,9 @@ public class MainActivity extends AppCompatActivity {
     public class PagerAdapter extends FragmentStatePagerAdapter {
 
         String[] titles = {
-                "Voucher Store",
                 "Payment Store",
-                "Benefited Customers"
+                "Benefited Customers",
+                "Expired Coupons"
         };
 
         PagerAdapter(FragmentManager fm, int list) {
@@ -197,15 +197,16 @@ public class MainActivity extends AppCompatActivity {
 
             if (i == 0) {
 
-                return new Bills();
+                //return new Bills();
+                return new Bills12();
             }
             else if (i == 1)
             {
-                return new Bills12();
+                return new Benefits();
             }
             else
             {
-                return new Benefits();
+                return new expired();
             }
         }
 

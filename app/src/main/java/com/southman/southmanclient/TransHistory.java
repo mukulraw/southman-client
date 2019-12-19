@@ -266,6 +266,7 @@ public class TransHistory extends AppCompatActivity {
             holder.date.setText(item.getCreated());
             holder.fromsoouthman.setText("\u20B9 " + item.getFromSouthman());
             holder.tosouthman.setText("\u20B9 " + item.getToSouthman());
+            holder.refund.setText("\u20B9 " + item.getReserved());
 
 
         }
@@ -276,7 +277,7 @@ public class TransHistory extends AppCompatActivity {
         }
 
         class ViewHolder extends RecyclerView.ViewHolder {
-            TextView voucher, redeem, gpay, cash, fromsoouthman , tosouthman  ,date;
+            TextView voucher, redeem, gpay, cash, fromsoouthman , tosouthman  ,date , refund;
 
             ViewHolder(@NonNull View itemView) {
                 super(itemView);
@@ -288,6 +289,7 @@ public class TransHistory extends AppCompatActivity {
                 cash = itemView.findViewById(R.id.cash);
                 fromsoouthman = itemView.findViewById(R.id.from_southman);
                 tosouthman = itemView.findViewById(R.id.to_southman);
+                refund = itemView.findViewById(R.id.refund);
 
 
             }

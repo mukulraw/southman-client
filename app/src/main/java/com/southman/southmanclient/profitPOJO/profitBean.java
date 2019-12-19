@@ -1,7 +1,9 @@
-package com.southman.southmanclient;
+package com.southman.southmanclient.profitPOJO;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+
+import java.util.List;
 
 public class profitBean {
     @SerializedName("status")
@@ -12,7 +14,7 @@ public class profitBean {
     private String message;
     @SerializedName("data")
     @Expose
-    private String data;
+    private List<Datum> data = null;
 
     public String getStatus() {
         return status;
@@ -30,12 +32,11 @@ public class profitBean {
         this.message = message;
     }
 
-    public String getData() {
+    public List<Datum> getData() {
         return data;
     }
 
-    public void setData(String data) {
+    public void setData(List<Datum> data) {
         this.data = data;
     }
-
 }

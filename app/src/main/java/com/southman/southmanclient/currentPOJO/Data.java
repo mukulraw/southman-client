@@ -25,6 +25,15 @@ public class Data {
     @SerializedName("cash")
     @Expose
     private String cash;
+    @SerializedName("reserved")
+    @Expose
+    private String reserved;
+    @SerializedName("cdm")
+    @Expose
+    private String cdm;
+    @SerializedName("southman")
+    @Expose
+    private String southman;
     @SerializedName("to_southman")
     @Expose
     private String toSouthman;
@@ -86,6 +95,30 @@ public class Data {
 
     public void setCash(String cash) {
         this.cash = cash;
+    }
+
+    public String getReserved() {
+        return reserved;
+    }
+
+    public void setReserved(String reserved) {
+        this.reserved = reserved;
+    }
+
+    public String getCdm() {
+        return cdm;
+    }
+
+    public void setCdm(String cdm) {
+        this.cdm = cdm;
+    }
+
+    public String getSouthman() {
+        return southman;
+    }
+
+    public void setSouthman(String southman) {
+        this.southman = southman;
     }
 
     public String getToSouthman() {

@@ -24,6 +24,7 @@
                 android:text="VOUCHER STORE"
                 android:drawableStart="@drawable/ic_google_pay_mark_800_gray"
                 android:id="@+id/type"
+                android:textSize="20sp"
                 android:paddingStart="4dp"
                 android:layout_alignParentStart="true"
                 android:textColor="@android:color/holo_blue_dark"

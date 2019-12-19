@@ -157,8 +157,8 @@ public class MainActivity2 extends AppCompatActivity {
     public class PagerAdapter extends FragmentStatePagerAdapter {
 
         String[] titles = {
-                "Voucher Store",
                 "Payment Store",
+                "Expired Coupons",
                 "Current Profit"
         };
 
@@ -177,11 +177,12 @@ public class MainActivity2 extends AppCompatActivity {
 
             if (i == 0) {
 
-                return new Bills2();
+                //return new Bills2();
+                return new Bills22();
             }
             else if (i == 1)
             {
-                return new Bills22();
+                return new expired2();
             }
             else
             {

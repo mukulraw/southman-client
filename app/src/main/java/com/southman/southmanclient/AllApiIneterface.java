@@ -9,6 +9,7 @@ import com.southman.southmanclient.gPayPOJO.gPayBean;
 import com.southman.southmanclient.loginPOJO.loginBean;
 import com.southman.southmanclient.onlinePayPOJO.onlinePayBean;
 import com.southman.southmanclient.orderPOJO.orderBean;
+import com.southman.southmanclient.profitPOJO.profitBean;
 import com.southman.southmanclient.transPOJO.transBean;
 import com.southman.southmanclient.vHistoryPOJO.vHistoryBean;
 import com.southman.southmanclient.voucherHistoryPOJO.voucherHistoryBean;
@@ -141,6 +142,19 @@ public interface AllApiIneterface {
             @Part("id") String client,
             @Part("date") String date
     );
+
+    @Multipart
+    @POST("southman/api/getExpired.php")
+    Call<benefitsBean> getExpired(
+            @Part("id") String client
+    );
+
+
+    @GET("southman/api/getExpired2.php")
+    Call<benefitsBean> getExpired2();
+
+    @GET("southman/api/returnCDM.php")
+    Call<benefitsBean> returnCDM();
 
     @Multipart
     @POST("southman/api/getOrders2.php")
