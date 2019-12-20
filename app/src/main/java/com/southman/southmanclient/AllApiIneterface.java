@@ -144,6 +144,13 @@ public interface AllApiIneterface {
     );
 
     @Multipart
+    @POST("southman/api/getBenefits2.php")
+    Call<benefitsBean> getBenefits2(
+            @Part("id") String client,
+            @Part("date") String date
+    );
+
+    @Multipart
     @POST("southman/api/getExpired.php")
     Call<benefitsBean> getExpired(
             @Part("id") String client

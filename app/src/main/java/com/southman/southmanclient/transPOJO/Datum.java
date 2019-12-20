@@ -37,6 +37,11 @@ public class Datum {
     @SerializedName("created")
     @Expose
     private String created;
+    @SerializedName("expired")
+    @Expose
+    private String expired;
+
+
 
     public String getId() {
         return id;
@@ -124,5 +129,13 @@ public class Datum {
 
     public void setSouthman(String southman) {
         this.southman = southman;
+    }
+
+    public String getExpired() {
+        return expired;
+    }
+
+    public void setExpired(String expired) {
+        this.expired = expired;
     }
 }

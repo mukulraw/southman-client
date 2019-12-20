@@ -1,14 +1,18 @@
 package com.southman.southmanclient;
 
 import android.app.Dialog;
+import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.Color;
-import android.support.annotation.NonNull;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,10 +23,9 @@ import android.widget.DatePicker;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.southman.southmanclient.transPOJO.Datum;
-import com.southman.southmanclient.transPOJO.transBean;
+import com.southman.southmanclient.benefitsPOJO.Datum;
+import com.southman.southmanclient.benefitsPOJO.benefitsBean;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -37,60 +40,43 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 import retrofit2.converter.scalars.ScalarsConverterFactory;
 
-public class TransHistory extends AppCompatActivity {
+public class Benefits2 extends Fragment {
+
 
     RecyclerView grid;
     GridLayoutManager manager;
     ProgressBar progress;
     List<Datum> list;
     BillAdapter adapter;
-    Toolbar toolbar;
-    String id;
-    LinearLayout linear;
     TextView date;
+    LinearLayout linear;
 
+    String dd;
+
+    @Nullable
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_trans_history);
-
-        id = getIntent().getStringExtra("id");
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.bill_layout, container, false);
 
         list = new ArrayList<>();
 
-        linear = findViewById(R.id.linear);
-        date = findViewById(R.id.date);
-        toolbar = findViewById(R.id.toolbar);
-        grid = findViewById(R.id.grid);
-        manager = new GridLayoutManager(TransHistory.this, 1);
-        progress = findViewById(R.id.progress);
+        linear = view.findViewById(R.id.linear);
+        date = view.findViewById(R.id.date);
+        grid = view.findViewById(R.id.grid);
+        manager = new GridLayoutManager(getContext(), 1);
+        progress = view.findViewById(R.id.progress);
 
+        adapter = new BillAdapter(getActivity(), list);
 
-
-
-        setSupportActionBar(toolbar);
-
-        getSupportActionBar().setDisplayShowTitleEnabled(false);
-
-        toolbar.setNavigationIcon(R.drawable.arrowleft);
-
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                finish();
-            }
-        });
-
-        toolbar.setTitle("Transaction history");
-
+        grid.setAdapter(adapter);
+        grid.setLayoutManager(manager);
 
         date.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
 
-                final Dialog dialog = new Dialog(TransHistory.this);
+                final Dialog dialog = new Dialog(getActivity());
                 dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
                 dialog.setCancelable(true);
                 dialog.setContentView(R.layout.date_dialog);
@@ -121,11 +107,11 @@ public class TransHistory extends AppCompatActivity {
 
                         date.setText("Date - " + strDate + " (click to change)");
 
-
+                        dd = strDate;
 
                         progress.setVisibility(View.VISIBLE);
 
-                        Bean b = (Bean) getApplicationContext();
+                        Bean b = (Bean) getActivity().getApplicationContext();
 
                         Retrofit retrofit = new Retrofit.Builder()
                                 .baseUrl(b.baseurl)
@@ -136,63 +122,77 @@ public class TransHistory extends AppCompatActivity {
                         AllApiIneterface cr = retrofit.create(AllApiIneterface.class);
 
 
-                        Call<transBean> call = cr.getTrans(id , strDate);
+                        Call<benefitsBean> call = cr.getBenefits2(SharePreferenceUtils.getInstance().getString("id"), dd);
 
-                        call.enqueue(new Callback<transBean>() {
+                        call.enqueue(new Callback<benefitsBean>() {
                             @Override
-                            public void onResponse(Call<transBean> call, Response<transBean> response) {
+                            public void onResponse(Call<benefitsBean> call, Response<benefitsBean> response) {
 
                                 if (response.body().getStatus().equals("1")) {
-
+                                    adapter.setData(response.body().getData());
                                     linear.setVisibility(View.GONE);
                                 } else {
+                                    adapter.setData(response.body().getData());
                                     linear.setVisibility(View.VISIBLE);
-                                    //Toast.makeText(TransHistory.this, response.body().getMessage(), Toast.LENGTH_SHORT).show();
+                                    //Toast.makeText(getContext(), response.body().getMessage(), Toast.LENGTH_SHORT).show();
                                 }
-                                adapter.setData(response.body().getData());
+
                                 progress.setVisibility(View.GONE);
 
                             }
 
                             @Override
-                            public void onFailure(Call<transBean> call, Throwable t) {
+                            public void onFailure(Call<benefitsBean> call, Throwable t) {
                                 progress.setVisibility(View.GONE);
                             }
                         });
-
 
 
                     }
                 });
 
 
-
             }
         });
-
-
-        adapter = new BillAdapter(this, list);
-
-        grid.setAdapter(adapter);
-        grid.setLayoutManager(manager);
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
 
         Date c = Calendar.getInstance().getTime();
         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
         String formattedDate = df.format(c);
 
-        Log.d("dddd" , formattedDate);
+        Log.d("dddd", formattedDate);
 
         date.setText("Date - " + formattedDate + " (click to change)");
+
+        dd = formattedDate;
+
+        singleReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+
+                if (intent.getAction().equals("count")) {
+                    onResume();
+                }
+
+            }
+        };
+
+        LocalBroadcastManager.getInstance(getContext()).registerReceiver(singleReceiver,
+                new IntentFilter("count"));
+
+
+        return view;
+    }
+
+    BroadcastReceiver singleReceiver;
+
+    @Override
+    public void onResume() {
+        super.onResume();
 
 
         progress.setVisibility(View.VISIBLE);
 
-        Bean b = (Bean) getApplicationContext();
+        Bean b = (Bean) getActivity().getApplicationContext();
 
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(b.baseurl)
@@ -203,26 +203,27 @@ public class TransHistory extends AppCompatActivity {
         AllApiIneterface cr = retrofit.create(AllApiIneterface.class);
 
 
-        Call<transBean> call = cr.getTrans(id , formattedDate);
+        Call<benefitsBean> call = cr.getBenefits2(SharePreferenceUtils.getInstance().getString("id"), dd);
 
-        call.enqueue(new Callback<transBean>() {
+        call.enqueue(new Callback<benefitsBean>() {
             @Override
-            public void onResponse(Call<transBean> call, Response<transBean> response) {
+            public void onResponse(Call<benefitsBean> call, Response<benefitsBean> response) {
 
                 if (response.body().getStatus().equals("1")) {
-
+                    adapter.setData(response.body().getData());
                     linear.setVisibility(View.GONE);
                 } else {
+                    adapter.setData(response.body().getData());
                     linear.setVisibility(View.VISIBLE);
-                    //Toast.makeText(TransHistory.this, response.body().getMessage(), Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(getContext(), response.body().getMessage(), Toast.LENGTH_SHORT).show();
                 }
-                adapter.setData(response.body().getData());
+
                 progress.setVisibility(View.GONE);
 
             }
 
             @Override
-            public void onFailure(Call<transBean> call, Throwable t) {
+            public void onFailure(Call<benefitsBean> call, Throwable t) {
                 progress.setVisibility(View.GONE);
             }
         });
@@ -248,27 +249,23 @@ public class TransHistory extends AppCompatActivity {
         @Override
         public ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
             LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            View view = inflater.inflate(R.layout.trans_list_model, viewGroup, false);
+            View view = inflater.inflate(R.layout.order_list_model3, viewGroup, false);
             return new ViewHolder(view);
         }
 
         @Override
-        public void onBindViewHolder(@NonNull ViewHolder holder, int i) {
-
+        public void onBindViewHolder(@NonNull final ViewHolder holder, int i) {
+            holder.setIsRecyclable(false);
             final Datum item = list.get(i);
 
-            holder.voucher.setText("\u20B9 " + item.getVoucher());
-            holder.redeem.setText("\u20B9 " + item.getRedeem());
-            holder.gpay.setText("\u20B9 " + item.getGpay());
-            holder.cash.setText("\u20B9 " + item.getCash());
-            holder.fromsoouthman.setText("\u20B9 " + item.getFromSouthman());
-            holder.tosouthman.setText("\u20B9 " + item.getToSouthman());
-            holder.date.setText(item.getCreated());
-            holder.fromsoouthman.setText("\u20B9 " + item.getFromSouthman());
-            holder.tosouthman.setText("\u20B9 " + item.getToSouthman());
-            holder.refund.setText("\u20B9 " + item.getReserved());
-            holder.expired.setText("\u20B9 " + item.getExpired());
 
+            holder.status.setText(item.getCreated());
+            holder.status2.setText(item.getStatus());
+
+
+            holder.type.setTextColor(Color.parseColor("#009688"));
+
+            holder.code.setText(item.getUser() + " has got Scratch Coupon worth \u20B9 " + item.getAmount());
 
         }
 
@@ -278,24 +275,34 @@ public class TransHistory extends AppCompatActivity {
         }
 
         class ViewHolder extends RecyclerView.ViewHolder {
-            TextView voucher, redeem, gpay, cash, fromsoouthman , tosouthman  ,date , refund , expired;
+            final TextView code;
+
+            final TextView type;
+            final TextView status , status2;
+
 
             ViewHolder(@NonNull View itemView) {
                 super(itemView);
 
-                date = itemView.findViewById(R.id.date);
-                voucher = itemView.findViewById(R.id.voucher);
-                redeem = itemView.findViewById(R.id.redeem);
-                gpay = itemView.findViewById(R.id.gpay);
-                cash = itemView.findViewById(R.id.cash);
-                fromsoouthman = itemView.findViewById(R.id.from_southman);
-                tosouthman = itemView.findViewById(R.id.to_southman);
-                refund = itemView.findViewById(R.id.refund);
-                expired = itemView.findViewById(R.id.expired);
+                code = itemView.findViewById(R.id.code);
+
+                type = itemView.findViewById(R.id.type);
+                status = itemView.findViewById(R.id.status);
+                status2 = itemView.findViewById(R.id.status2);
 
 
             }
         }
     }
+
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+
+        LocalBroadcastManager.getInstance(getContext()).unregisterReceiver(singleReceiver);
+
+    }
+
 
 }

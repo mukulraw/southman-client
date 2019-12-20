@@ -178,7 +178,8 @@ public class MainActivity extends AppCompatActivity {
 
         String[] titles = {
                 "Payment Store",
-                "Benefited Customers",
+                "Own Benefits",
+                "Other Benefits",
                 "Expired Coupons"
         };
 
@@ -204,6 +205,10 @@ public class MainActivity extends AppCompatActivity {
             {
                 return new Benefits();
             }
+            else if (i == 2)
+            {
+                return new Benefits2();
+            }
             else
             {
                 return new expired();
@@ -212,7 +217,7 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         public int getCount() {
-            return 3;
+            return 4;
         }
     }
 

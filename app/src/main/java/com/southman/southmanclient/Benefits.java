@@ -262,6 +262,7 @@ public class Benefits extends Fragment {
 
 
             holder.status.setText(item.getCreated());
+            holder.status2.setText(item.getStatus());
 
 
             holder.type.setTextColor(Color.parseColor("#009688"));
@@ -279,7 +280,7 @@ public class Benefits extends Fragment {
             final TextView code;
 
             final TextView type;
-            final TextView status;
+            final TextView status , status2;
 
 
             ViewHolder(@NonNull View itemView) {
@@ -289,6 +290,7 @@ public class Benefits extends Fragment {
 
                 type = itemView.findViewById(R.id.type);
                 status = itemView.findViewById(R.id.status);
+                status2 = itemView.findViewById(R.id.status2);
 
 
             }

@@ -19,6 +19,9 @@ public class Datum {
     @SerializedName("expiry")
     @Expose
     private String expiry;
+    @SerializedName("status")
+    @Expose
+    private String status;
 
     public String getId() {
         return id;
@@ -58,5 +61,13 @@ public class Datum {
 
     public void setExpiry(String expiry) {
         this.expiry = expiry;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 }

@@ -32,7 +32,7 @@ public class Current extends AppCompatActivity {
 
     Button complete;
 
-    TextView voucher, redeem, gpay, cash, fromsoouthman , tosouthman , history , refund;
+    TextView voucher, redeem, gpay, cash, fromsoouthman , tosouthman , history , refund , expired;
     ProgressBar progress;
 
     @Override
@@ -55,6 +55,7 @@ public class Current extends AppCompatActivity {
         fromsoouthman = findViewById(R.id.from_southman);
         tosouthman = findViewById(R.id.to_southman);
         refund = findViewById(R.id.refund);
+        expired = findViewById(R.id.expired);
 
         if (type.equals("client"))
         {
@@ -213,6 +214,7 @@ public class Current extends AppCompatActivity {
                     fromsoouthman.setText("\u20B9 " + item.getFromSouthman());
                     tosouthman.setText("\u20B9 " + item.getToSouthman());
                     refund.setText("\u20B9 " + item.getReserved());
+                    expired.setText("\u20B9 " + item.getExpired());
 
                 }
 

@@ -40,6 +40,10 @@ public class Data {
     @SerializedName("from_southman")
     @Expose
     private String fromSouthman;
+    @SerializedName("expired")
+    @Expose
+    private String expired;
+
 
     public String getId() {
         return id;
@@ -135,5 +139,13 @@ public class Data {
 
     public void setFromSouthman(String fromSouthman) {
         this.fromSouthman = fromSouthman;
+    }
+
+    public String getExpired() {
+        return expired;
+    }
+
+    public void setExpired(String expired) {
+        this.expired = expired;
     }
 }
