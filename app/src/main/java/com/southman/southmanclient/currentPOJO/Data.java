@@ -43,7 +43,9 @@ public class Data {
     @SerializedName("expired")
     @Expose
     private String expired;
-
+    @SerializedName("buttontext")
+    @Expose
+    private String buttontext;
 
     public String getId() {
         return id;
@@ -147,5 +149,13 @@ public class Data {
 
     public void setExpired(String expired) {
         this.expired = expired;
+    }
+
+    public String getButtontext() {
+        return buttontext;
+    }
+
+    public void setButtontext(String buttontext) {
+        this.buttontext = buttontext;
     }
 }

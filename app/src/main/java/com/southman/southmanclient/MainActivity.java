@@ -179,8 +179,8 @@ public class MainActivity extends AppCompatActivity {
         String[] titles = {
                 "Payment Store",
                 "Own Benefits",
-                "Other Benefits",
-                "Expired Coupons"
+                "Other Benefits"
+                //"Expired Coupons"
         };
 
         PagerAdapter(FragmentManager fm, int list) {
@@ -205,19 +205,19 @@ public class MainActivity extends AppCompatActivity {
             {
                 return new Benefits();
             }
-            else if (i == 2)
+            else
             {
                 return new Benefits2();
             }
-            else
+            /*else
             {
                 return new expired();
-            }
+            }*/
         }
 
         @Override
         public int getCount() {
-            return 4;
+            return 3;
         }
     }
 

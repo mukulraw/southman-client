@@ -8,6 +8,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -30,10 +31,12 @@ public class Current extends AppCompatActivity {
     String id, name , type;
     Toolbar toolbar;
 
-    Button complete;
+    Button complete , gpaycomplete;
 
     TextView voucher, redeem, gpay, cash, fromsoouthman , tosouthman , history , refund , expired;
     ProgressBar progress;
+
+    LinearLayout exp , cts;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,14 +59,23 @@ public class Current extends AppCompatActivity {
         tosouthman = findViewById(R.id.to_southman);
         refund = findViewById(R.id.refund);
         expired = findViewById(R.id.expired);
+        exp = findViewById(R.id.exp);
+        cts = findViewById(R.id.cts);
+        gpaycomplete = findViewById(R.id.gpaycomplete);
 
         if (type.equals("client"))
         {
             complete.setVisibility(View.GONE);
+            gpaycomplete.setVisibility(View.GONE);
+            exp.setVisibility(View.GONE);
+            cts.setVisibility(View.GONE);
         }
         else
         {
             complete.setVisibility(View.VISIBLE);
+            gpaycomplete.setVisibility(View.VISIBLE);
+            exp.setVisibility(View.VISIBLE);
+            cts.setVisibility(View.VISIBLE);
         }
 
         setSupportActionBar(toolbar);
@@ -90,6 +102,81 @@ public class Current extends AppCompatActivity {
                 Intent intent = new Intent(Current.this , TransHistory.class);
                 intent.putExtra("id" , id);
                 startActivity(intent);
+
+            }
+        });
+
+        gpaycomplete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+
+
+
+                final Dialog dialog = new Dialog(Current.this);
+                dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                dialog.setCancelable(false);
+                dialog.setContentView(R.layout.comp_dialog);
+                dialog.show();
+
+                Button ookk = dialog.findViewById(R.id.button2);
+                Button canc = dialog.findViewById(R.id.button4);
+
+                canc.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        dialog.dismiss();
+                    }
+                });
+
+
+                ookk.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+
+                        dialog.dismiss();
+
+                        progress.setVisibility(View.VISIBLE);
+
+                        Bean b = (Bean) getApplicationContext();
+
+                        Retrofit retrofit = new Retrofit.Builder()
+                                .baseUrl(b.baseurl)
+                                .addConverterFactory(ScalarsConverterFactory.create())
+                                .addConverterFactory(GsonConverterFactory.create())
+                                .build();
+
+                        AllApiIneterface cr = retrofit.create(AllApiIneterface.class);
+
+                        Call<currentBean> call = cr.completeTrans2(id);
+
+                        call.enqueue(new Callback<currentBean>() {
+                            @Override
+                            public void onResponse(Call<currentBean> call, Response<currentBean> response) {
+
+                                Toast.makeText(Current.this, response.body().getMessage(), Toast.LENGTH_SHORT).show();
+
+                                progress.setVisibility(View.GONE);
+
+                                loadData();
+
+                            }
+
+                            @Override
+                            public void onFailure(Call<currentBean> call, Throwable t) {
+
+                            }
+                        });
+
+                    }
+                });
+
+
+
+
+
+
+
 
             }
         });
@@ -215,6 +302,8 @@ public class Current extends AppCompatActivity {
                     tosouthman.setText("\u20B9 " + item.getToSouthman());
                     refund.setText("\u20B9 " + item.getReserved());
                     expired.setText("\u20B9 " + item.getExpired());
+
+                    complete.setText(item.getButtontext());
 
                 }
 
