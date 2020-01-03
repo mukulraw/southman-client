@@ -426,7 +426,7 @@
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
             android:layout_gravity="center_horizontal"
-            android:text="Complete only GPAY"
+            android:text="Complete only Southman To Client"
             android:background="@drawable/whitebutton"
             android:textColor="#000000"
             android:paddingStart="20dp"

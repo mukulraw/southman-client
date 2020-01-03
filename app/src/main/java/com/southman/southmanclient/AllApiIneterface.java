@@ -203,6 +203,12 @@ public interface AllApiIneterface {
     );
 
     @Multipart
+    @POST("southman/api/completeTrans3.php")
+    Call<currentBean> completeTrans3(
+            @Part("client") String client
+    );
+
+    @Multipart
     @POST("southman/api/rejectOrder.php")
     Call<onlinePayBean> cancelOrder(
             @Part("id") String id
