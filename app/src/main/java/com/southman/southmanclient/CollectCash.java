@@ -93,7 +93,7 @@ public class CollectCash extends AppCompatActivity {
 
         client_name.setText("Please collect \u20B9 " + nb + " from " + user);
 
-        amount.setText(Html.fromHtml("\u20B9 " + String.valueOf(nb) + " <strike>\u20B9 " + amm + "</strike>"));
+        amount.setText(Html.fromHtml("<font color=#43a047>\u20B9 " + String.valueOf(nb) + " </font> <font color=red><strike>\u20B9 " + amm + "</font></strike>"));
 
 
         approve.setOnClickListener(new View.OnClickListener() {
